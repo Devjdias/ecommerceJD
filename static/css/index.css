@@ -59,14 +59,16 @@ section {
 
 .navbar a {
     margin: 0 1rem;
-    font-size: 1.9rem;
+    font-size: 2rem;
     color: #702727 ;
+    transition: 0.3s;
+    padding-bottom: 0.3rem; /* aqui! */
+
 }
 
 .navbar a:hover {
-    color: var(--main-color);
-    padding-bottom: 0.5rem;
-    font-size: 2rem;
+    color: rgba(126, 35, 53, 0.5);
+    transform: scale(1.08);
 
 }
 

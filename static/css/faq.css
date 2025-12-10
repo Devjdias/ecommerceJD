@@ -19,7 +19,7 @@
 
 body {
     background-color: #b6b2b28f;
-    font-family: "Poppins", sans-serif;
+    font-family: "Roboto", sans-serif;
 }
 
 section {
@@ -83,12 +83,15 @@ a:hover {
     color: #450210;
     transition: 0.3s;
     position: relative;
+    padding-bottom: 0.3rem; /* aqui! */
 }
 
-.header .navbar a:hover,
-.header .navbar a.active {
+.header .navbar a:hover {
     color: rgba(126, 35, 53, 0.5);
+    transform: scale(1.08);
 }
+
+
 
 .header .icons {
     display: flex;
