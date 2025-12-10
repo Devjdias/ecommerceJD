@@ -4,27 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}" />
     <link rel="stylesheet" href="{{ url_for('static', filename='css/perfil.css') }}" />
     <link rel="shortcut icon" href="{{ url_for('static', filename='images/iconLivro.png') }}">
-    <title>Meu Perfil - ClicLeitura</title>        
+    <title>Meu Perfil - ClicLeitura</title>
+
 </head>
 <body>
     <!-- HEADER -->
     <header class="header">
-        <section>
-            <a href="{{ url_for('index') }}" class="logo">
-                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo">
-            </a>
-            <nav class="navbar">
-                <a href="{{ url_for('index') }}">Home</a>
-                <a href="#" class="active">Meu Perfil</a>
-            </nav>
-            <div class="icons">
-                <span id="userNameHeader" style="color: #702727; font-weight: bold; margin-right: 15px;"></span>
-            </div>
-        </section>
-    </header>
+    <section>
+        <a href="{{ url_for('index') }}" class="logo">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo">
+        </a>
+        <nav class="navbar">
+            <a href="{{ url_for('index') }}">Home</a>
+            <a href="{{ url_for('index') }}#shop">E-books</a>
+            <a href="#" class="active">Meu Perfil</a>
+        </nav>
+        <div class="icons">
+            <span id="userNameHeader" style="color: #702727; font-weight: bold; margin-right: 15px;">Débora</span>
+            <button class="btn-logout-header" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i> Sair 
+            </button>
+        </div>
+    </section>
+</header>
 
     <div class="perfil-container">
         <a href="{{ url_for('index') }}" class="btn-voltar">
@@ -49,9 +53,6 @@
                         <p><i class="fas fa-calendar"></i> Membro desde <span id="userMembro"></span></p>
                     </div>
                 </div>
-                <button class="btn-logout" onclick="logout()">
-                    <i class="fas fa-sign-out-alt"></i> Sair
-                </button>
             </div>
 
             <!-- ESTATÍSTICAS -->
