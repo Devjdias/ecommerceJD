@@ -134,9 +134,6 @@ print(f"Status: {r.status_code}, Size: {len(r.content)} bytes")
 ```
 ecommerceOfic/
 ├── app.py                          # Flask backend
-├── criar_banco.py                  # Criar schema do SQLite
-├── importar_livros_api.py          # Importar do Gutenberg
-├── importar_livros_completo.py     # Importar de múltiplas APIs
 ├── loja.db                         # SQLite database
 ├── requirements.txt                # Dependências Python
 ├── .env                            # Credenciais (não commitar!)
@@ -146,14 +143,9 @@ ecommerceOfic/
 │   ├── js/
 │   │   └── app.js                  # Funções JS auxiliares
 │   ├── images/                     # Imagens do site
-│   └── ebooks/                     # PDFs locais (opcional)
 │
 └── templates/
-    ├── index.html                  # Catálogo de livros
-    ├── livro.html                  # Detalhes + checkout
-    ├── cadastroForm.html           # Registro de usuário
-    ├── loginForm.html              # Login
-    └── compra.html                 # (legacy)
+    ├── index.html                  # Principal que direciona para as outras páginas
 ```
 
 ## 🐛 Troubleshooting
@@ -203,5 +195,38 @@ Livros: Domínio público (Internet Archive, Project Gutenberg)
 - **qrcode[pil]**: Geração de QR codes PIX
 
 ---
+🔍 OPÇÕES PARA VISUALIZAR O BANCO:
+1. Extensão do VS Code (RECOMENDADO) ⭐
+Instale uma dessas extensões no VS Code para visualizar seu banco:
+SQLite
+SQLite Viewer
+SQLite3 Editor
+
+Após instalar:
+Clique no arquivo loja.db no Explorer
+Ele abrirá automaticamente em uma visualização interativa
+Você verá todas as tabelas, poderá executar queries SQL, ver os dados, etc.
+
+2. Via Terminal (Rápido) 💻
+python -c "import sqlite3; import pandas as pd; con = sqlite3.connect('loja.db'); print('\n=== TABELA: LIVROS ===\n'); print(pd.read_sql_query('SELECT id, titulo, autor, preco FROM livros LIMIT 5', con)); print('\n=== TABELA: USUARIOS ===\n'); print(pd.read_sql_query('SELECT id, nome, email, criado_em FROM usuarios', con)); print('\n=== TABELA: PEDIDOS (últimos 5) ===\n'); print(pd.read_sql_query('SELECT id, email, status, criado_em FROM pedidos ORDER BY id DESC LIMIT 5', con)); con.close()"
+
+3. Ferramenta Online 🌐
+Acesse: https://sqliteonline.com/
+Clique em "File" → "Open DB"
+Selecione seu loja.db
+
+4. DB Browser for SQLite (Aplicativo Desktop)
+Download: https://sqlitebrowser.org/
+Abra o arquivo loja.db
+Interface gráfica completa
+Recomendo instalar a extensão do VS Code - é a forma mais prática! 😊
+_________________________________________________________________________
+✅ Backend: Flask com 1211 linhas
+✅ Banco de dados: 15 livros, 3 usuários, 47 pedidos
+✅ Frontend: 12 páginas HTML + 14 arquivos CSS
+✅ Funcionalidades: Carrinho, PIX, Admin, Perfil, FAQ, Contato
+✅ Sistema de pagamento: PIX simulado funcionando
+✅ Email: Envio automático de e-books
+✅ Repositório: No GitHub (Devjdias/ecommerceJD)
 
 **Desenvolvido com Flask + SQLite + APIs públicas de livros gratuitos** 📚
