@@ -10,7 +10,6 @@ import requests
 from datetime import datetime
 import hashlib
 from functools import wraps
-import mercadopago
 import time
 
 # 1. Carregar variáveis de ambiente
@@ -33,19 +32,11 @@ app.config['MAIL_DEBUG'] = True  # Isso ajuda a ver detalhes do erro no terminal
 mail = Mail(app)
 DB = 'loja.db'
 
-# 3. Configuração do Mercado Pago
-MP_ACCESS_TOKEN = os.getenv('MERCADOPAGO_ACCESS_TOKEN')
-sdk = mercadopago.SDK(MP_ACCESS_TOKEN) if MP_ACCESS_TOKEN and MP_ACCESS_TOKEN != 'seu_access_token_aqui' else None
-
 # --- VERIFICAÇÃO INICIAL ---
 # Isso avisa logo de cara se a senha não foi configurada
 if app.config['MAIL_PASSWORD'] == 'sua_senha_de_app_16_caracteres':
     print("\n⚠️  ATENÇÃO: Você não configurou a Senha de App no arquivo .env!")
     print("   O envio de e-mail VAI FALHAR. Edite o arquivo .env agora.\n")
-
-if not sdk:
-    print("\n⚠️  ATENÇÃO: Mercado Pago não configurado!")
-    print("   PIX será simulado. Configure MERCADOPAGO_ACCESS_TOKEN no .env\n")
 
 def conectar():
     """Conecta ao banco de dados SQLite"""
@@ -233,75 +224,28 @@ def api_checkout():
     pedido_id = cur.lastrowid
     con.commit()
 
-    # 2. Gerar PIX Real via Mercado Pago (se configurado)
-    if sdk:
-        try:
-            payment_data = {
-                "transaction_amount": float(livro['preco']),
-                "description": f"E-book: {livro['titulo']}",
-                "payment_method_id": "pix",
-                "payer": {
-                    "email": email
-                },
-                "external_reference": str(pedido_id),
-                "notification_url": f"https://seu-dominio.com/webhook/mercadopago"  # Você precisará configurar
-            }
-            
-            payment_response = sdk.payment().create(payment_data)
-            payment = payment_response["response"]
-            
-            if payment.get("status") == "pending":
-                # Pegar QR Code e código PIX
-                qr_code = payment["point_of_interaction"]["transaction_data"]["qr_code"]
-                qr_code_base64 = payment["point_of_interaction"]["transaction_data"]["qr_code_base64"]
-                
-                # Salvar ID do pagamento Mercado Pago
-                cur.execute("UPDATE pedidos SET pix_code=? WHERE id=?", 
-                           (payment["id"], pedido_id))
-                con.commit()
-                con.close()
-                
-                print(f"✅ PIX Real gerado! Pedido #{pedido_id}, Payment ID: {payment['id']}")
-                
-                return jsonify({
-                    'pedido_id': pedido_id,
-                    'qr_base64': qr_code_base64,
-                    'pix_text': qr_code,
-                    'payment_id': payment['id'],
-                    'real_pix': True
-                })
-            else:
-                con.close()
-                return jsonify({'error': 'Erro ao gerar PIX'}), 500
-                
-        except Exception as e:
-            con.close()
-            print(f"❌ Erro Mercado Pago: {e}")
-            return jsonify({'error': f'Erro ao processar pagamento: {str(e)}'}), 500
+    # Gerar PIX Simulado
+    valor = f"{livro['preco']:.2f}"
+    texto_pix = f"00020126580014BR.GOV.BCB.PIX0136{email}520400005303986540{valor}5802BR5911ClicLeitura6009Sao_Paulo62070503***6304"
     
-    # Fallback: PIX Simulado (quando não configurado)
-    else:
-        valor = f"{livro['preco']:.2f}"
-        texto_pix = f"00020126580014BR.GOV.BCB.PIX0136{email}520400005303986540{valor}5802BR5911ClicLeitura6009Sao_Paulo62070503***6304"
-        
-        img = qrcode.make(texto_pix)
-        buf = BytesIO()
-        img.save(buf, format='PNG')
-        qr_b64 = base64.b64encode(buf.getvalue()).decode('utf-8')
-        
-        cur.execute("UPDATE pedidos SET pix_code=? WHERE id=?", 
-                   (f"SIMULADO_{pedido_id}", pedido_id))
-        con.commit()
-        con.close()
-        
-        print(f"⚠️  PIX SIMULADO gerado para pedido #{pedido_id}")
+    img = qrcode.make(texto_pix)
+    buf = BytesIO()
+    img.save(buf, format='PNG')
+    qr_b64 = base64.b64encode(buf.getvalue()).decode('utf-8')
+    
+    cur.execute("UPDATE pedidos SET pix_code=? WHERE id=?", 
+               (f"SIMULADO_{pedido_id}", pedido_id))
+    con.commit()
+    con.close()
+    
+    print(f"✅ PIX SIMULADO gerado para pedido #{pedido_id}")
 
-        return jsonify({
-            'pedido_id': pedido_id, 
-            'qr_base64': qr_b64, 
-            'pix_text': texto_pix,
-            'real_pix': False
-        })
+    return jsonify({
+        'pedido_id': pedido_id, 
+        'qr_base64': qr_b64, 
+        'pix_text': texto_pix,
+        'real_pix': False
+    })
 
 # WEBHOOK DESATIVADO - Envio manual pelo painel admin
 # Para reativar envio automático, descomente o código abaixo
@@ -477,8 +421,6 @@ def enviar_livro_email(pedido_id):
     if not pdf_content:
         con.close()
         print("❌ PDF vazio ou não disponível")
-        return False
-        con.close()
         return False
 
     # Buscar nome do usuário
@@ -1091,11 +1033,6 @@ def admin_dashboard():
                          pedidos=pedidos,
                          livros=livros,
                          clientes=clientes)
-    
-    return render_template('dashboard.html', 
-                         admin_email=session['admin_email'],
-                         stats=stats,
-                         pedidos=[dict(p) for p in pedidos])
 
 @app.route('/admin/enviar-livro', methods=['POST'])
 @login_required
