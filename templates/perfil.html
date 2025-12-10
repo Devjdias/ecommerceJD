@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/perfil.css') }}" />
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/iconLivro.png') }}">
+    <title>Meu Perfil - ClicLeitura</title>        
+</head>
+<body>
+    <!-- HEADER -->
+    <header class="header">
+        <section>
+            <a href="{{ url_for('index') }}" class="logo">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo">
+            </a>
+            <nav class="navbar">
+                <a href="{{ url_for('index') }}">Home</a>
+                <a href="#" class="active">Meu Perfil</a>
+            </nav>
+            <div class="icons">
+                <span id="userNameHeader" style="color: #702727; font-weight: bold; margin-right: 15px;"></span>
+            </div>
+        </section>
+    </header>
+
+    <div class="perfil-container">
+        <a href="{{ url_for('index') }}" class="btn-voltar">
+            <i class="fas fa-arrow-left"></i> Voltar para a Loja
+        </a>
+
+        <div id="loading" class="loading">
+            <i class="fas fa-spinner"></i>
+            <p>Carregando seu perfil...</p>
+        </div>
+
+        <div id="content" style="display: none;">
+            <!-- HEADER DO PERFIL -->
+            <div class="perfil-header">
+                <div class="perfil-info">
+                    <div class="perfil-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="perfil-dados">
+                        <h1 id="userName"></h1>
+                        <p><i class="fas fa-envelope"></i> <span id="userEmail"></span></p>
+                        <p><i class="fas fa-calendar"></i> Membro desde <span id="userMembro"></span></p>
+                    </div>
+                </div>
+                <button class="btn-logout" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Sair
+                </button>
+            </div>
+
+            <!-- ESTATÍSTICAS -->
+            <div class="stats-grid">
+                <div class="stat-card total">
+                    <i class="fas fa-shopping-bag stat-icon"></i>
+                    <h3 id="totalPedidos">0</h3>
+                    <p>Total de Pedidos</p>
+                </div>
+                <div class="stat-card pago">
+                    <i class="fas fa-check-circle stat-icon"></i>
+                    <h3 id="pedidosPagos">0</h3>
+                    <p>Pedidos Concluídos</p>
+                </div>
+                <div class="stat-card pendente">
+                    <i class="fas fa-clock stat-icon"></i>
+                    <h3 id="pedidosPendentes">0</h3>
+                    <p>Pedidos Pendentes</p>
+                </div>
+                <div class="stat-card gasto">
+                    <i class="fas fa-dollar-sign stat-icon"></i>
+                    <h3 id="totalGasto">R$ 0,00</h3>
+                    <p>Total Gasto</p>
+                </div>
+            </div>
+
+            <!-- CONFIGURAÇÕES -->
+            <div class="config-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-cog"></i> Configurações da Conta</h2>
+                </div>
+
+                <div id="alertMessage" class="alert"></div>
+
+                <form id="formDados">
+                    <div class="form-group">
+                        <label for="editNome"><i class="fas fa-user"></i> Nome Completo</label>
+                        <input type="text" id="editNome" disabled>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editEmail"><i class="fas fa-envelope"></i> E-mail</label>
+                        <input type="email" id="editEmail" disabled>
+                    </div>
+
+                    <div id="botoesEdicao">
+                        <button type="button" class="btn-edit" onclick="habilitarEdicao()">
+                            <i class="fas fa-edit"></i> Editar Informações
+                        </button>
+                    </div>
+
+                    <div id="botoesSalvar" style="display: none;">
+                        <button type="submit" class="btn-save">
+                            <i class="fas fa-save"></i> Salvar Alterações
+                        </button>
+                        <button type="button" class="btn-cancel" onclick="cancelarEdicao()">
+                            <i class="fas fa-times"></i> Cancelar
+                        </button>
+                    </div>
+                </form>
+
+                <div class="senha-section">
+                    <h3><i class="fas fa-lock"></i> Alterar Senha</h3>
+                    <form id="formSenha">
+                        <div class="form-group">
+                            <label for="senhaAtual">Senha Atual</label>
+                            <input type="password" id="senhaAtual" placeholder="Digite sua senha atual">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="novaSenha">Nova Senha</label>
+                            <input type="password" id="novaSenha" placeholder="Digite a nova senha">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="confirmarSenha">Confirmar Nova Senha</label>
+                            <input type="password" id="confirmarSenha" placeholder="Confirme a nova senha">
+                        </div>
+
+                        <button type="submit" class="btn-save">
+                            <i class="fas fa-key"></i> Alterar Senha
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- HISTÓRICO DE PEDIDOS -->
+            <div class="pedidos-lista">
+                <div class="section-header">
+                    <h2><i class="fas fa-history"></i> Histórico de Compras</h2>
+                </div>
+                <div id="pedidosContainer"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let usuarioDados = null;
+        let dadosOriginais = {};
+
+        window.addEventListener('DOMContentLoaded', async () => {
+            const usuario = JSON.parse(localStorage.getItem('usuario') || 'null');
+            
+            if (!usuario) {
+                alert('Você precisa fazer login primeiro!');
+                window.location.href = '/login';
+                return;
+            }
+
+            // Atualizar header
+            document.getElementById('userNameHeader').textContent = usuario.nome.split(' ')[0];
+
+            // Carregar dados do perfil
+            try {
+                const response = await fetch(`/api/perfil/${usuario.id}`);
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error);
+                }
+
+                // Salvar dados do usuário
+                usuarioDados = data.usuario;
+
+                // Preencher dados do usuário
+                document.getElementById('userName').textContent = data.usuario.nome;
+                document.getElementById('userEmail').textContent = data.usuario.email;
+                const membroDesde = new Date(data.usuario.membro_desde).toLocaleDateString('pt-BR');
+                document.getElementById('userMembro').textContent = membroDesde;
+
+                // Preencher formulário de edição
+                document.getElementById('editNome').value = data.usuario.nome;
+                document.getElementById('editEmail').value = data.usuario.email;
+                dadosOriginais = {
+                    nome: data.usuario.nome,
+                    email: data.usuario.email
+                };
+
+                // Preencher estatísticas
+                document.getElementById('totalPedidos').textContent = data.stats.total_pedidos;
+                document.getElementById('pedidosPagos').textContent = data.stats.pedidos_pagos;
+                document.getElementById('pedidosPendentes').textContent = data.stats.pedidos_pendentes;
+                document.getElementById('totalGasto').textContent = `R$ ${data.stats.total_gasto.toFixed(2)}`;
+
+                // Preencher histórico de pedidos
+                const container = document.getElementById('pedidosContainer');
+                
+                if (data.pedidos.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-shopping-bag"></i>
+                            <h3>Nenhuma compra ainda</h3>
+                            <p>Explore nossa loja e faça seu primeiro pedido!</p>
+                        </div>
+                    `;
+                } else {
+                    container.innerHTML = data.pedidos.map(pedido => {
+                        const data = new Date(pedido.data).toLocaleDateString('pt-BR');
+                        const statusBadge = pedido.status === 'PAGO' 
+                            ? '<span class="badge badge-success"><i class="fas fa-check"></i> Concluído</span>'
+                            : '<span class="badge badge-warning"><i class="fas fa-clock"></i> Pendente</span>';
+                        
+                        const imagemUrl = pedido.imagem.startsWith('http') 
+                            ? pedido.imagem 
+                            : `/static/images/${pedido.imagem}`;
+
+                        return `
+                            <div class="pedido-item">
+                                <img src="${imagemUrl}" alt="Capa" class="pedido-capa" onerror="this.src='/static/images/default-book.jpg'">
+                                <div class="pedido-info">
+                                    <h3>${pedido.titulo}</h3>
+                                    <p><i class="fas fa-user"></i> ${pedido.autor}</p>
+                                    <p class="pedido-data"><i class="fas fa-calendar"></i> ${data}</p>
+                                </div>
+                                <div class="pedido-status">
+                                    ${statusBadge}
+                                    <p class="pedido-preco">R$ ${pedido.preco.toFixed(2)}</p>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                }
+
+                // Mostrar conteúdo
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('content').style.display = 'block';
+
+            } catch (error) {
+                alert('Erro ao carregar perfil: ' + error.message);
+                console.error(error);
+            }
+        });
+
+        function logout() {
+            if (confirm('Deseja realmente sair?')) {
+                localStorage.removeItem('usuario');
+                window.location.href = '/';
+            }
+        }
+
+        function habilitarEdicao() {
+            document.getElementById('editNome').disabled = false;
+            document.getElementById('editEmail').disabled = false;
+            document.getElementById('botoesEdicao').style.display = 'none';
+            document.getElementById('botoesSalvar').style.display = 'block';
+        }
+
+        function cancelarEdicao() {
+            document.getElementById('editNome').value = dadosOriginais.nome;
+            document.getElementById('editEmail').value = dadosOriginais.email;
+            document.getElementById('editNome').disabled = true;
+            document.getElementById('editEmail').disabled = true;
+            document.getElementById('botoesEdicao').style.display = 'block';
+            document.getElementById('botoesSalvar').style.display = 'none';
+        }
+
+        function mostrarAlerta(mensagem, tipo) {
+            const alert = document.getElementById('alertMessage');
+            alert.className = `alert alert-${tipo}`;
+            alert.textContent = mensagem;
+            alert.style.display = 'block';
+            setTimeout(() => {
+                alert.style.display = 'none';
+            }, 5000);
+        }
+
+        document.getElementById('formDados').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const novoNome = document.getElementById('editNome').value.trim();
+            const novoEmail = document.getElementById('editEmail').value.trim();
+
+            if (!novoNome || !novoEmail) {
+                mostrarAlerta('Preencha todos os campos!', 'error');
+                return;
+            }
+
+            try {
+                const usuario = JSON.parse(localStorage.getItem('usuario'));
+                const response = await fetch('/api/atualizar-perfil', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        usuario_id: usuario.id,
+                        nome: novoNome,
+                        email: novoEmail
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    mostrarAlerta('Dados atualizados com sucesso!', 'success');
+                    
+                    // Atualizar localStorage
+                    usuario.nome = novoNome;
+                    usuario.email = novoEmail;
+                    localStorage.setItem('usuario', JSON.stringify(usuario));
+
+                    // Atualizar dados originais
+                    dadosOriginais = {nome: novoNome, email: novoEmail};
+
+                    // Atualizar exibição
+                    document.getElementById('userName').textContent = novoNome;
+                    document.getElementById('userEmail').textContent = novoEmail;
+                    document.getElementById('userNameHeader').textContent = novoNome.split(' ')[0];
+
+                    cancelarEdicao();
+                } else {
+                    mostrarAlerta(data.error || 'Erro ao atualizar dados', 'error');
+                }
+            } catch (error) {
+                mostrarAlerta('Erro ao conectar com o servidor', 'error');
+                console.error(error);
+            }
+        });
+
+        document.getElementById('formSenha').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const senhaAtual = document.getElementById('senhaAtual').value;
+            const novaSenha = document.getElementById('novaSenha').value;
+            const confirmarSenha = document.getElementById('confirmarSenha').value;
+
+            if (!senhaAtual || !novaSenha || !confirmarSenha) {
+                mostrarAlerta('Preencha todos os campos de senha!', 'error');
+                return;
+            }
+
+            if (novaSenha.length < 4) {
+                mostrarAlerta('A nova senha deve ter pelo menos 4 caracteres!', 'error');
+                return;
+            }
+
+            if (novaSenha !== confirmarSenha) {
+                mostrarAlerta('As senhas não coincidem!', 'error');
+                return;
+            }
+
+            try {
+                const usuario = JSON.parse(localStorage.getItem('usuario'));
+                const response = await fetch('/api/alterar-senha', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        usuario_id: usuario.id,
+                        senha_atual: senhaAtual,
+                        nova_senha: novaSenha
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    mostrarAlerta('Senha alterada com sucesso!', 'success');
+                    document.getElementById('formSenha').reset();
+                } else {
+                    mostrarAlerta(data.error || 'Erro ao alterar senha', 'error');
+                }
+            } catch (error) {
+                mostrarAlerta('Erro ao conectar com o servidor', 'error');
+                console.error(error);
+            }
+        });
+    </script>
+</body>
+</html>

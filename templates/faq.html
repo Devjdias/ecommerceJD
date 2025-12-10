@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/faq.css') }}" />
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/iconLivro.png') }}">
+    <title>Perguntas Frequentes - ClicLeitura</title>
+</head>
+<body>
+    <!-- HEADER -->
+    <header class="header">
+        <section>
+            <a href="{{ url_for('index') }}" class="logo">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo">
+            </a>
+            <nav class="navbar">
+                <a href="{{ url_for('index') }}">Home</a>
+                <a href="{{ url_for('sobre_page') }}">Sobre</a>
+                <a href="{{ url_for('index') }}#shop">E-books</a>
+                <a href="#" class="active">FAQ</a>
+            </nav>
+            <div class="icons">
+                <div id="carrinhoIcon" style="position: relative; display: inline-block; cursor: pointer;">
+                    <img width="30" height="30" src="https://img.icons8.com/?size=100&id=9671&format=png&color=702727" alt="Carrinho">
+                    <span id="carrinhoCount" style="display: none;"></span>
+                </div>
+                <a href="{{ url_for('login_page') }}" id="loginLink">
+                    <img width="30" height="30" src="https://img.icons8.com/?size=100&id=24220&format=png&color=702727" alt="Login" />
+                </a>
+                <a href="{{ url_for('perfil_page') }}" id="perfilLink" style="display: none;">
+                    <img width="30" height="30" src="https://img.icons8.com/?size=100&id=7820&format=png&color=702727" alt="Perfil" />
+                </a>
+                <span id="userInfo" style="display: none; color: #702727; font-weight: bold; margin-left: 10px;"></span>
+                <button id="logoutBtn" style="display: none; margin-left: 10px; padding: 5px 15px; background: #702727; color: white; border: none; border-radius: 4px; cursor: pointer;">Sair</button>
+            </div>
+        </section>
+    </header>
+
+    <div class="faq-container">
+        <div class="faq-header">
+            <h1><i class="fas fa-question-circle"></i> Perguntas Frequentes</h1>
+            <p>Encontre respostas rápidas para as dúvidas mais comuns sobre a ClicLeitura</p>
+        </div>
+
+        <div class="search-box">
+            <input type="text" id="searchFAQ" placeholder="Buscar por palavra-chave...">
+            <i class="fas fa-search"></i>
+        </div>
+
+        <div class="faq-categories">
+            <div class="category-card" onclick="scrollToCategory('compra')">
+                <i class="fas fa-shopping-cart"></i>
+                <h3>Compra e Pagamento</h3>
+                <p>PIX, pedidos e confirmação</p>
+            </div>
+            <div class="category-card" onclick="scrollToCategory('entrega')">
+                <i class="fas fa-envelope"></i>
+                <h3>Entrega</h3>
+                <p>E-mail e recebimento</p>
+            </div>
+            <div class="category-card" onclick="scrollToCategory('produto')">
+                <i class="fas fa-book"></i>
+                <h3>Produto</h3>
+                <p>E-books e formatos</p>
+            </div>
+            <div class="category-card" onclick="scrollToCategory('reembolso')">
+                <i class="fas fa-undo"></i>
+                <h3>Reembolso</h3>
+                <p>Devolução e garantia</p>
+            </div>
+        </div>
+
+        <!-- COMPRA E PAGAMENTO -->
+        <h2 id="compra" style="color: #702727; margin: 40px 0 20px; font-size: 1.8rem;">
+            <i class="fas fa-shopping-cart"></i> Compra e Pagamento
+        </h2>
+
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleFAQ(this)">
+                <h3>Como faço para comprar um e-book?</h3>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+                <div class="faq-answer-content">
+                    <p>O processo de compra é muito simples:</p>
+                    <ol>
+                        <li>Navegue pelo catálogo e escolha o e-book desejado</li>
+                        <li>Clique em "Ver detalhes" para mais informações</li>
+                        <li>Você pode adicionar ao carrinho ou comprar diretamente</li>
+                        <li>Faça login ou crie uma conta (obrigatório)</li>
+                        <li>Clique em "Gerar PIX e Comprar"</li>
+                        <li>Escaneie o QR Code ou copie o código PIX</li>
+                        <li>Realize o pagamento no app do seu banco</li>
+                    </ol>
+                    <p>Após a confirmação do pagamento, o e-book será enviado para seu e-mail em até 24 horas!</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleFAQ(this)">
+                <h3>Quais formas de pagamento são aceitas?</h3>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+                <div class="faq-answer-content">
+                    <p>Atualmente aceitamos pagamento via <strong>PIX</strong>. É a forma mais rápida e segura! Após gerar o código, você tem alguns minutos para realizar o pagamento. O PIX é instantâneo e seu pedido é processado automaticamente.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleFAQ(this)">
+                <h3>Preciso criar uma conta para comprar?</h3>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+                <div class="faq-answer-content">
+                    <p><strong>Sim!</strong> É necessário criar uma conta para fazer compras na ClicLeitura. Isso garante que:</p>
+                    <ul>
+                        <li>Seus pedidos fiquem vinculados ao seu perfil</li>
+                        <li>Você possa acompanhar o histórico de compras</li>
+                        <li>Tenha acesso ao carrinho de compras</li>
+                        <li>Possa solicitar reenvio dos e-books quando necessário</li>
+                    </ul>
+                    <p>O cadastro é rápido e gratuito! Basta informar nome, e-mail e criar uma senha.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleFAQ(this)">
+                <h3>O pagamento via PIX é seguro?</h3>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+                <div class="faq-answer-content">
+                    <p><strong>Sim, totalmente seguro!</strong> O PIX é o sistema de pagamentos instantâneos do Banco Central do Brasil. Todas as transações são criptografadas e monitoradas. Utilizamos integração segura para gerar os códigos de pagamento e não temos acesso aos seus dados bancários.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ENTREGA -->
+        <h2 id="entrega" style="color: #702727; margin: 40px 0 20px; font-size: 1.8rem;">
+            <i class="fas fa-envelope"></i> Entrega
+        </h2>
+
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleFAQ(this)">
+                <h3>Como recebo o e-book após a compra?</h3>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+                <div class="faq-answer-content">
+                    <p>O e-book é enviado <strong>diretamente por e-mail</strong> para o endereço cadastrado na sua conta. O arquivo vem anexado em formato PDF, pronto para download. Certifique-se de:</p>
+                    <ul>
+                        <li>Verificar a caixa de entrada e a pasta de spam</li>
+                        <li>Ter espaço suficiente na caixa de e-mail</li>
+                        <li>Usar um e-mail válido e ativo</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleFAQ(this)">
+                <h3>Quanto tempo demora para receber o e-book?</h3>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+                <div class="faq-answer-content">
+                    <p>Após a confirmação do pagamento via PIX, o e-book é enviado em <strong>até 24 horas</strong>. Na maioria dos casos, o envio ocorre em poucas horas. O prazo pode variar dependendo do horário da compra e processamento do pedido pelo nosso sistema.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleFAQ(this)">
+                <h3>Não recebi o e-book. O que fazer?</h3>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+                <div class="faq-answer-content">
+                    <p>Se você não recebeu o e-book após 24 horas:</p>
+                    <ol>
+                        <li>Verifique sua pasta de spam/lixo eletrônico</li>
+                        <li>Confirme se o e-mail cadastrado está correto</li>
+                        <li>Acesse seu perfil e verifique se o pedido está como "PAGO"</li>
+                        <li>Entre em contato conosco através do e-mail: <strong>1diasjosilene@gmail.com</strong> ou <strong>contato@clicleitura.com</strong></li>
+                    </ol>
+                    <p>Informe seu nome, e-mail de compra e número do pedido para que possamos reenviar rapidamente!</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleFAQ(this)">
+                <h3>Posso pedir o reenvio do e-book?</h3>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+                <div class="faq-answer-content">
+                    <p><strong>Sim!</strong> Se você perdeu o arquivo ou deletou por acidente, pode solicitar o reenvio sem custo adicional. Entre em contato através do nosso e-mail de atendimento informando os dados da compra. O reenvio será feito em até 48 horas úteis.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- PRODUTO -->
+        <h2 id="produto" style="color: #702727; margin: 40px 0 20px; font-size: 1.8rem;">
+            <i class="fas fa-book"></i> Produto
+        </h2>
+
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleFAQ(this)">
+                <h3>Em qual formato são os e-books?</h3>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+                <div class="faq-answer-content">
+                    <p>Todos os nossos e-books são enviados em formato <strong>PDF</strong>. Este formato é universal e pode ser lido em:</p>
+                    <ul>
+                        <li>Computadores (Windows, Mac, Linux)</li>
+                        <li>Smartphones (Android, iOS)</li>
+                        <li>Tablets</li>
+                        <li>E-readers compatíveis com PDF</li>
+                    </ul>
+                    <p>Você pode usar programas como Adobe Reader, navegadores web, ou aplicativos de leitura do seu dispositivo.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleFAQ(this)">
+                <h3>Posso imprimir o e-book?</h3>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+                <div class="faq-answer-content">
+                    <p><strong>Sim!</strong> De acordo com os nossos Termos de Uso, você pode imprimir <strong>uma única cópia física</strong> do e-book adquirido para uso pessoal e privado. A impressão não pode ser utilizada para fins comerciais ou redistribuição.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleFAQ(this)">
+                <h3>Posso ler em quantos dispositivos?</h3>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+                <div class="faq-answer-content">
+                    <p>Você pode fazer o download e ler o e-book em <strong>quantos dispositivos pessoais quiser</strong>! Celular, tablet, computador - fique à vontade. O único requisito é que seja para <strong>uso pessoal e não comercial</strong>. Você pode fazer uma cópia de backup para prevenir perda do arquivo.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleFAQ(this)">
+                <h3>Posso compartilhar o e-book com outras pessoas?</h3>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+                <div class="faq-answer-content">
+                    <p><strong>Não.</strong> Os e-books são licenciados para uso pessoal e individual. É <strong>proibido</strong>:</p>
+                    <ul>
+                        <li>Compartilhar em grupos, redes sociais ou sites</li>
+                        <li>Revender ou redistribuir</li>
+                        <li>Usar comercialmente (cursos, palestras, etc.)</li>
+                        <li>Fazer cópias para terceiros</li>
+                    </ul>
+                    <p>Essas ações violam os direitos autorais e podem resultar em penalidades legais conforme nossos Termos de Uso.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- REEMBOLSO -->
+        <h2 id="reembolso" style="color: #702727; margin: 40px 0 20px; font-size: 1.8rem;">
+            <i class="fas fa-undo"></i> Reembolso e Garantia
+        </h2>
+
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleFAQ(this)">
+                <h3>Posso pedir reembolso?</h3>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+                <div class="faq-answer-content">
+                    <p><strong>Sim!</strong> Você tem direito de arrependimento conforme o Código de Defesa do Consumidor (Art. 49). O reembolso é concedido:</p>
+                    <ul>
+                        <li><strong>Prazo:</strong> Até 7 dias corridos após receber o e-book</li>
+                        <li><strong>Motivo:</strong> Arrependimento da compra (sem necessidade de justificativa)</li>
+                        <li><strong>Condição:</strong> Você deve excluir todas as cópias do arquivo</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleFAQ(this)">
+                <h3>Como solicitar o reembolso?</h3>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+                <div class="faq-answer-content">
+                    <p>Para solicitar reembolso:</p>
+                    <ol>
+                        <li>Entre em contato pelo e-mail: <strong>1diasjosilene@gmail.com</strong> ou <strong>contato@clicleitura.com</strong></li>
+                        <li>Informe: Nome completo, e-mail de compra, número do pedido e motivo</li>
+                        <li>Aguarde análise (até 48 horas úteis)</li>
+                        <li>Após aprovação, o valor será devolvido em até 5 dias úteis</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleFAQ(this)">
+                <h3>Como recebo o dinheiro de volta?</h3>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+                <div class="faq-answer-content">
+                    <p>O reembolso é processado através de <strong>devolução financeira via PIX</strong>, utilizando a mesma forma de pagamento da compra. Você receberá o valor integral pago diretamente na sua conta bancária. Certifique-se de informar uma chave PIX válida ao solicitar o reembolso.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleFAQ(this)">
+                <h3>Em quais casos NÃO há reembolso?</h3>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+                <div class="faq-answer-content">
+                    <p>Não realizamos reembolso nos seguintes casos:</p>
+                    <ul>
+                        <li>Solicitação após o prazo de 7 dias</li>
+                        <li>Incompatibilidade de dispositivos (PDF é formato universal)</li>
+                        <li>Problemas técnicos do cliente (leitor de PDF, espaço em disco, etc.)</li>
+                        <li>Expectativas não atendidas sobre o conteúdo do e-book (as descrições são detalhadas)</li>
+                        <li>Compra realizada por engano sem contato dentro do prazo</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- CONTA E PERFIL -->
+        <h2 id="conta" style="color: #702727; margin: 40px 0 20px; font-size: 1.8rem;">
+            <i class="fas fa-user"></i> Conta e Perfil
+        </h2>
+
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleFAQ(this)">
+                <h3>Como altero meus dados cadastrais?</h3>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+                <div class="faq-answer-content">
+                    <p>Para alterar seus dados:</p>
+                    <ol>
+                        <li>Faça login na sua conta</li>
+                        <li>Acesse "Meu Perfil" (ícone de usuário no topo)</li>
+                        <li>Role até a seção "Configurações da Conta"</li>
+                        <li>Clique em "Editar Informações"</li>
+                        <li>Altere nome e/ou e-mail</li>
+                        <li>Clique em "Salvar Alterações"</li>
+                    </ol>
+                    <p>Você também pode alterar sua senha na mesma página.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleFAQ(this)">
+                <h3>Esqueci minha senha. O que fazer?</h3>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+                <div class="faq-answer-content">
+                    <p>Entre em contato conosco através do e-mail <strong>1diasjosilene@gmail.com</strong> informando o e-mail cadastrado. Nossa equipe irá auxiliá-lo na recuperação da senha em até 48 horas úteis.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleFAQ(this)">
+                <h3>Como vejo meu histórico de compras?</h3>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+                <div class="faq-answer-content">
+                    <p>Acesse "Meu Perfil" após fazer login. Lá você encontra:</p>
+                    <ul>
+                        <li>Estatísticas de compras (total de pedidos, valores, etc.)</li>
+                        <li>Histórico completo com capas dos livros</li>
+                        <li>Status de cada pedido (PAGO ou PENDENTE)</li>
+                        <li>Datas de compra</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- CTA DE CONTATO -->
+        <div class="contact-cta">
+            <h2>Não encontrou sua resposta?</h2>
+            <p>Nossa equipe está pronta para ajudar! Entre em contato conosco.</p>
+            <a href="mailto:1diasjosilene@gmail.com">
+                <i class="fas fa-envelope"></i> Enviar E-mail
+            </a>
+        </div>
+    </div>
+
+    <!-- RODAPÉ -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-column">
+                <h3>ClicLeitura</h3>
+                <p>Sua livraria digital com os melhores e-books. Leitura de qualidade ao alcance de um clique.</p>
+                <div class="social-icons">
+                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+
+            <div class="footer-column">
+                <h4>Links Rápidos</h4>
+                <ul>
+                    <li><a href="{{ url_for('index') }}">Home</a></li>
+                    <li><a href="{{ url_for('index') }}#sobre">Sobre Nós</a></li>
+                    <li><a href="{{ url_for('index') }}#shop">Catálogo</a></li>
+                    <li><a href="{{ url_for('terms_page') }}">Termos de Serviço</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-column">
+                <h4>Atendimento</h4>
+                <ul>
+                    <li><a href="{{ url_for('faq_page') }}">FAQ</a></li>
+                    <li><a href="{{ url_for('terms_page') }}">Política de Privacidade</a></li>
+                    <li><a href="mailto:1diasjosilene@gmail.com">Contato</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-column">
+                <h4>Contato</h4>
+                <ul class="contact-info">
+                    <li><i class="fas fa-envelope"></i> 1diasjosilene@gmail.com</li>
+                    <li><i class="fas fa-envelope"></i> contato@clicleitura.com</li>
+                    <li><i class="fas fa-map-marker-alt"></i> Rio Branco, AC</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; 2025 ClicLeitura. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Toggle FAQ
+        function toggleFAQ(element) {
+            const answer = element.nextElementSibling;
+            const allQuestions = document.querySelectorAll('.faq-question');
+            const allAnswers = document.querySelectorAll('.faq-answer');
+            
+            // Fechar outras
+            allQuestions.forEach(q => {
+                if (q !== element) q.classList.remove('active');
+            });
+            allAnswers.forEach(a => {
+                if (a !== answer) a.classList.remove('active');
+            });
+            
+            // Toggle atual
+            element.classList.toggle('active');
+            answer.classList.toggle('active');
+        }
+
+        // Scroll para categoria
+        function scrollToCategory(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // Busca
+        document.getElementById('searchFAQ').addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            const faqItems = document.querySelectorAll('.faq-item');
+            
+            faqItems.forEach(item => {
+                const question = item.querySelector('.faq-question h3').textContent.toLowerCase();
+                const answer = item.querySelector('.faq-answer-content').textContent.toLowerCase();
+                
+                if (question.includes(searchTerm) || answer.includes(searchTerm)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+
+        // Verificar login
+        window.addEventListener('DOMContentLoaded', () => {
+            const usuario = JSON.parse(localStorage.getItem('usuario') || 'null');
+            const loginLink = document.getElementById('loginLink');
+            const perfilLink = document.getElementById('perfilLink');
+            const userInfo = document.getElementById('userInfo');
+            const logoutBtn = document.getElementById('logoutBtn');
+            
+            if (usuario) {
+                loginLink.style.display = 'none';
+                perfilLink.style.display = 'inline';
+                userInfo.style.display = 'inline';
+                userInfo.textContent = `Olá, ${usuario.nome.split(' ')[0]}!`;
+                logoutBtn.style.display = 'inline-block';
+                
+                logoutBtn.addEventListener('click', () => {
+                    if (confirm('Deseja sair?')) {
+                        localStorage.removeItem('usuario');
+                        location.reload();
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/iconLivro.png') }}">
+    <title>Dashboard Admin - ClicLeitura</title>
+</head>
+<body class="dashboard-body">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <i class="fas fa-book-reader"></i>
+            <h2>ClicLeitura</h2>
+            <span class="admin-badge">ADMIN</span>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a href="?tab=dashboard" class="nav-item" data-tab="dashboard">
+                <i class="fas fa-chart-line"></i>
+                Dashboard
+            </a>
+            <a href="?tab=aprovacoes" class="nav-item" data-tab="aprovacoes">
+                <i class="fas fa-check-circle"></i>
+                Aprovações
+                {% if stats.pedidos_aguardando_aprovacao > 0 %}
+                <span class="badge-notify">{{ stats.pedidos_aguardando_aprovacao }}</span>
+                {% endif %}
+            </a>
+            <a href="?tab=pedidos" class="nav-item" data-tab="pedidos">
+                <i class="fas fa-shopping-cart"></i>
+                Pedidos
+            </a>
+            <a href="?tab=livros" class="nav-item" data-tab="livros">
+                <i class="fas fa-book"></i>
+                Livros
+            </a>
+            <a href="?tab=clientes" class="nav-item" data-tab="clientes">
+                <i class="fas fa-users"></i>
+                Clientes
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <a href="{{ url_for('admin_logout') }}" class="logout-btn">
+                <i class="fas fa-sign-out-alt"></i>
+                Sair
+            </a>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+        <header class="dashboard-header">
+            <h1>Painel Administrativo</h1>
+            <div class="admin-info">
+                <i class="fas fa-user-circle"></i>
+                <span>{{ admin_email }}</span>
+            </div>
+        </header>
+
+        <!-- ESTATÍSTICAS -->
+        <section class="stats-grid" id="stats-section">
+            <div class="stat-card">
+                <div class="stat-icon blue">
+                    <i class="fas fa-shopping-bag"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>{{ stats.total_pedidos }}</h3>
+                    <p>Total de Pedidos</p>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon green">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>{{ stats.pedidos_pagos }}</h3>
+                    <p>Pedidos Pagos</p>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon orange">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>{{ stats.pedidos_pendentes }}</h3>
+                    <p>Pedidos Pendentes</p>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon yellow">
+                    <i class="fas fa-hourglass-half"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>{{ stats.pedidos_aguardando_aprovacao }}</h3>
+                    <p>Aguardando Aprovação</p>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon purple">
+                    <i class="fas fa-dollar-sign"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>R$ {{ "%.2f"|format(stats.receita_total) }}</h3>
+                    <p>Receita Total</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB: DASHBOARD -->
+        <section class="content-section tab-content" id="tab-dashboard">
+            <div class="section-header">
+                <h2><i class="fas fa-chart-line"></i> Visão Geral</h2>
+            </div>
+            
+            <div class="dashboard-summary">
+                <div class="summary-card">
+                    <h3>📊 Resumo do Dia</h3>
+                    <p>Pedidos hoje: <strong>{{ stats.pedidos_hoje or 0 }}</strong></p>
+                    <p>Receita hoje: <strong>R$ {{ "%.2f"|format(stats.receita_hoje or 0) }}</strong></p>
+                </div>
+                
+                <div class="summary-card">
+                    <h3>📚 Livros</h3>
+                    <p>Total cadastrados: <strong>{{ stats.total_livros }}</strong></p>
+                    <p>Mais vendido: <strong>{{ stats.livro_mais_vendido or 'Nenhum' }}</strong></p>
+                </div>
+                
+                <div class="summary-card">
+                    <h3>👥 Clientes</h3>
+                    <p>Total cadastrados: <strong>{{ stats.total_clientes }}</strong></p>
+                    <p>Novos este mês: <strong>{{ stats.clientes_mes or 0 }}</strong></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB: APROVAÇÕES -->
+        <section class="content-section tab-content" id="tab-aprovacoes" style="display: none;">
+            <div class="section-header">
+                <h2><i class="fas fa-check-circle"></i> Pedidos Aguardando Aprovação</h2>
+                <button class="btn-refresh" onclick="carregarPedidosPendentes()">
+                    <i class="fas fa-sync-alt"></i> Atualizar
+                </button>
+            </div>
+
+            <div id="aprovacoes-container">
+                <p style="text-align: center; padding: 20px; color: #888;">
+                    <i class="fas fa-spinner fa-spin"></i> Carregando pedidos...
+                </p>
+            </div>
+        </section>
+
+        <!-- TAB: PEDIDOS -->
+        <section class="content-section tab-content" id="tab-pedidos" style="display: none;">
+            <div class="section-header">
+                <h2><i class="fas fa-shopping-cart"></i> Gerenciar Pedidos</h2>
+                <button class="btn-refresh" onclick="location.reload()">
+                    <i class="fas fa-sync-alt"></i> Atualizar
+                </button>
+            </div>
+
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Cliente</th>
+                            <th>E-mail</th>
+                            <th>Livro</th>
+                            <th>Preço</th>
+                            <th>Status</th>
+                            <th>Data</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for pedido in pedidos %}
+                        <tr>
+                            <td><strong>#{{ pedido.id }}</strong></td>
+                            <td>
+                                <i class="fas fa-user"></i>
+                                {{ pedido.nome_cliente }}
+                            </td>
+                            <td>
+                                <i class="fas fa-envelope"></i>
+                                {{ pedido.email }}
+                            </td>
+                            <td>{{ pedido.titulo[:50] }}...</td>
+                            <td class="price">R$ {{ "%.2f"|format(pedido.preco) }}</td>
+                            <td>
+                                {% if pedido.status == 'PAGO' %}
+                                <span class="badge badge-success">
+                                    <i class="fas fa-check"></i> Pago
+                                </span>
+                                {% else %}
+                                <span class="badge badge-warning">
+                                    <i class="fas fa-clock"></i> Pendente
+                                </span>
+                                {% endif %}
+                            </td>
+                            <td>{{ pedido.criado_em[:16] }}</td>
+                            <td>
+                                {% if pedido.status == 'PENDENTE' %}
+                                <button class="btn-action btn-send" 
+                                        onclick="enviarLivro({{ pedido.id }})" 
+                                        title="Enviar livro por email"
+                                        id="btn-{{ pedido.id }}">
+                                    <i class="fas fa-paper-plane"></i> Enviar
+                                </button>
+                                {% else %}
+                                <button class="btn-action btn-sent" disabled title="Já enviado">
+                                    <i class="fas fa-check-circle"></i> Enviado
+                                </button>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- TAB: LIVROS -->
+        <section class="content-section tab-content" id="tab-livros" style="display: none;">
+            <div class="section-header">
+                <h2><i class="fas fa-book"></i> Gerenciar Livros</h2>
+                <button class="btn-primary" onclick="location.href='/admin/adicionar-livro'">
+                    <i class="fas fa-plus"></i> Adicionar Livro
+                </button>
+            </div>
+
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Capa</th>
+                            <th>Título</th>
+                            <th>Autor</th>
+                            <th>Preço</th>
+                            <th>Origem</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for livro in livros %}
+                        <tr>
+                            <td><strong>#{{ livro.id }}</strong></td>
+                            <td>
+                                {% if livro.imagem.startswith('http') %}
+                                <img src="{{ livro.imagem }}" alt="Capa" style="width: 40px; height: 60px; object-fit: cover; border-radius: 4px;">
+                                {% else %}
+                                <img src="{{ url_for('static', filename='images/' + livro.imagem) }}" alt="Capa" style="width: 40px; height: 60px; object-fit: cover; border-radius: 4px;">
+                                {% endif %}
+                            </td>
+                            <td>{{ livro.titulo[:60] }}{% if livro.titulo|length > 60 %}...{% endif %}</td>
+                            <td>{{ livro.autor[:40] }}{% if livro.autor|length > 40 %}...{% endif %}</td>
+                            <td class="price">R$ {{ "%.2f"|format(livro.preco) }}</td>
+                            <td><span class="badge badge-info">{{ livro.origem }}</span></td>
+                            <td>
+                                <button class="btn-action btn-edit" onclick="editarLivro({{ livro.id }})" title="Editar">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn-action btn-delete" onclick="deletarLivro({{ livro.id }})" title="Excluir">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- TAB: CLIENTES -->
+        <section class="content-section tab-content" id="tab-clientes" style="display: none;">
+            <div class="section-header">
+                <h2><i class="fas fa-users"></i> Gerenciar Clientes</h2>
+            </div>
+
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nome</th>
+                            <th>E-mail</th>
+                            <th>Compras</th>
+                            <th>Total Gasto</th>
+                            <th>Cadastro</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for cliente in clientes %}
+                        <tr>
+                            <td><strong>#{{ cliente.id }}</strong></td>
+                            <td>
+                                <i class="fas fa-user"></i>
+                                {{ cliente.nome }}
+                            </td>
+                            <td>{{ cliente.email }}</td>
+                            <td><span class="badge badge-info">{{ cliente.total_compras }}</span></td>
+                            <td class="price">R$ {{ "%.2f"|format(cliente.total_gasto) }}</td>
+                            <td>{{ cliente.criado_em[:10] if cliente.criado_em else 'N/A' }}</td>
+                            <td>
+                                <button class="btn-action btn-view" onclick="verCliente({{ cliente.id }})" title="Ver detalhes">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Gerenciar abas
+        const urlParams = new URLSearchParams(window.location.search);
+        const activeTab = urlParams.get('tab') || 'dashboard';
+        
+        // Mostrar aba ativa
+        document.querySelectorAll('.tab-content').forEach(tab => {
+            tab.style.display = 'none';
+        });
+        document.getElementById(`tab-${activeTab}`).style.display = 'block';
+        
+        // Destacar item do menu ativo
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.classList.remove('active');
+            if (item.getAttribute('data-tab') === activeTab) {
+                item.classList.add('active');
+            }
+        });
+        
+        // Mostrar/ocultar estatísticas
+        if (activeTab !== 'dashboard') {
+            document.getElementById('stats-section').style.display = 'none';
+        }
+        
+        function enviarLivro(pedidoId) {
+            const btn = document.getElementById('btn-' + pedidoId);
+            
+            if (!confirm(`Confirma o envio do livro para o pedido #${pedidoId}?`)) {
+                return;
+            }
+            
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
+            
+            fetch('/admin/enviar-livro', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ pedido_id: pedidoId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.ok) {
+                    alert('✅ Livro enviado com sucesso!');
+                    location.reload();
+                } else {
+                    alert('❌ Erro: ' + data.error);
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-paper-plane"></i> Enviar';
+                }
+            })
+            .catch(error => {
+                alert('❌ Erro ao enviar: ' + error);
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-paper-plane"></i> Enviar';
+            });
+        }
+        
+        function editarLivro(livroId) {
+            alert(`Funcionalidade de edição será implementada para livro #${livroId}`);
+        }
+        
+        function deletarLivro(livroId) {
+            if (confirm('Tem certeza que deseja excluir este livro?')) {
+                alert(`Livro #${livroId} será excluído (implementar rota)`);
+            }
+        }
+        
+        function verCliente(clienteId) {
+            alert(`Detalhes do cliente #${clienteId} (implementar modal)`);
+        }
+
+        // Carregar pedidos pendentes de aprovação
+        function carregarPedidosPendentes() {
+            const container = document.getElementById('aprovacoes-container');
+            container.innerHTML = '<p style="text-align: center; padding: 20px; color: #888;"><i class="fas fa-spinner fa-spin"></i> Carregando pedidos...</p>';
+            
+            fetch('/api/admin/pedidos-pendentes')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.ok && data.pedidos.length > 0) {
+                        let html = '<div class="aprovacoes-grid">';
+                        
+                        data.pedidos.forEach(pedido => {
+                            html += `
+                                <div class="aprovacao-card" id="pedido-${pedido.id}">
+                                    <div class="aprovacao-header">
+                                        <span class="pedido-id">#${pedido.id}</span>
+                                        <span class="pedido-data">${formatarData(pedido.data_pedido)}</span>
+                                    </div>
+                                    <div class="aprovacao-body">
+                                        <div class="livro-info">
+                                            <img src="${pedido.livro_capa}" alt="${pedido.livro_titulo}" class="livro-mini-capa">
+                                            <div>
+                                                <strong>${pedido.livro_titulo}</strong>
+                                                <p class="text-muted">R$ ${pedido.preco_final.toFixed(2)}</p>
+                                            </div>
+                                        </div>
+                                        <div class="cliente-info">
+                                            <p><i class="fas fa-user"></i> <strong>${pedido.cliente_nome}</strong></p>
+                                            <p><i class="fas fa-envelope"></i> ${pedido.cliente_email}</p>
+                                        </div>
+                                    </div>
+                                    <div class="aprovacao-actions">
+                                        <button class="btn-aprovar" onclick="aprovarPedido(${pedido.id})">
+                                            <i class="fas fa-check"></i> Aprovar
+                                        </button>
+                                        <button class="btn-rejeitar" onclick="rejeitarPedido(${pedido.id})">
+                                            <i class="fas fa-times"></i> Rejeitar
+                                        </button>
+                                    </div>
+                                </div>
+                            `;
+                        });
+                        
+                        html += '</div>';
+                        container.innerHTML = html;
+                    } else {
+                        container.innerHTML = '<div class="empty-state"><i class="fas fa-check-double"></i><p>Nenhum pedido aguardando aprovação!</p></div>';
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro ao carregar pedidos:', error);
+                    container.innerHTML = '<p style="text-align: center; padding: 20px; color: #e74c3c;"><i class="fas fa-exclamation-triangle"></i> Erro ao carregar pedidos</p>';
+                });
+        }
+
+        function aprovarPedido(pedidoId) {
+            if (!confirm(`Confirma a aprovação do pedido #${pedidoId}?\n\nO e-book será enviado automaticamente ao cliente.`)) {
+                return;
+            }
+
+            const card = document.getElementById(`pedido-${pedidoId}`);
+            card.style.opacity = '0.5';
+            card.style.pointerEvents = 'none';
+
+            fetch(`/api/admin/aprovar/${pedidoId}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.ok) {
+                    card.style.background = '#d4edda';
+                    setTimeout(() => {
+                        card.remove();
+                        carregarPedidosPendentes();
+                        location.reload(); // Atualiza estatísticas
+                    }, 1000);
+                } else {
+                    alert('❌ Erro: ' + data.error);
+                    card.style.opacity = '1';
+                    card.style.pointerEvents = 'auto';
+                }
+            })
+            .catch(error => {
+                alert('❌ Erro ao aprovar: ' + error);
+                card.style.opacity = '1';
+                card.style.pointerEvents = 'auto';
+            });
+        }
+
+        function rejeitarPedido(pedidoId) {
+            const motivo = prompt('Informe o motivo da rejeição:');
+            if (!motivo) return;
+
+            const card = document.getElementById(`pedido-${pedidoId}`);
+            card.style.opacity = '0.5';
+            card.style.pointerEvents = 'none';
+
+            fetch(`/api/admin/rejeitar/${pedidoId}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ motivo: motivo })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.ok) {
+                    card.style.background = '#f8d7da';
+                    setTimeout(() => {
+                        card.remove();
+                        carregarPedidosPendentes();
+                        location.reload(); // Atualiza estatísticas
+                    }, 1000);
+                } else {
+                    alert('❌ Erro: ' + data.error);
+                    card.style.opacity = '1';
+                    card.style.pointerEvents = 'auto';
+                }
+            })
+            .catch(error => {
+                alert('❌ Erro ao rejeitar: ' + error);
+                card.style.opacity = '1';
+                card.style.pointerEvents = 'auto';
+            });
+        }
+
+        function formatarData(dataString) {
+            const data = new Date(dataString);
+            return data.toLocaleDateString('pt-BR') + ' ' + data.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+        }
+
+        // Carregar pedidos pendentes quando a aba for ativada
+        if (activeTab === 'aprovacoes') {
+            carregarPedidosPendentes();
+        }
+    </script>
+</body>
+</html>

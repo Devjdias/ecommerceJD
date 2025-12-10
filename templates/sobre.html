@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/reset.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/sobre.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/iconLivro.png') }}">
+    <title>Sobre Nós - ClicLeitura</title>
+</head>
+<body>
+    <!-- CABEÇALHO -->
+    <header class="header">
+        <section>
+            <a href="{{ url_for('index') }}">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" style="height: 50px;">
+            </a>
+            <nav class="navbar">
+                <a href="{{ url_for('index') }}">Home</a>
+                <a href="{{ url_for('sobre_page') }}">Sobre</a>
+                <a href="{{ url_for('index') }}#shop">E-books</a>
+                <a href="{{ url_for('contato_page') }}">Contato</a>
+                <a href="{{ url_for('localizacao_page') }}">Localização</a>
+                <a href="{{ url_for('faq_page') }}">FAQ</a>
+            </nav>
+            <div class="icons">
+                <a href="{{ url_for('perfil_page') }}" id="perfilLink" style="display: none;">
+                <img width="30" height="30" src="https://img.icons8.com/?size=100&id=7820&format=png&color=702727"
+                    alt="Meu Perfil" style="cursor: pointer;" title="Meu Perfil" />
+                </a>
+            </div>
+        </section>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section class="hero-sobre">
+        <div class="hero-content">
+            <h1>📖 Nossa História</h1>
+            <p>Transformando vidas através da leitura digital</p>
+        </div>
+    </section>
+
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main class="container-sobre">
+        <!-- História da Empresa -->
+        <section class="historia-section">
+            <div class="historia-content">
+                <div class="historia-texto">
+                    <h2>Como Tudo Começou</h2>
+                    <p>
+                        A <strong>ClicLeitura</strong> nasceu em <strong>2020</strong>, no coração do Acre, com um sonho simples mas transformador: 
+                        <em>democratizar o acesso ao conhecimento através da tecnologia</em>.
+                    </p>
+                    <p>
+                        Fundada por uma equipe apaixonada por livros e inovação, começamos como uma pequena biblioteca digital 
+                        com apenas 50 títulos cuidadosamente selecionados. O que nos movia era a certeza de que a leitura 
+                        tem o poder de transformar vidas, e queríamos tornar esse acesso mais fácil, rápido e democrático.
+                    </p>
+                    <p>
+                        Hoje, somos referência em e-books na região Norte, com milhares de títulos e uma comunidade crescente 
+                        de leitores apaixonados. Nossa jornada é guiada pela missão de levar conhecimento de qualidade para 
+                        todos os cantos do Brasil.
+                    </p>
+                </div>
+                <div class="historia-imagem">
+                    <img src="{{ url_for('static', filename='images/principal.png') }}" alt="ClicLeitura - Nossa História">
+                    <div class="imagem-overlay">
+                        <i class="fas fa-book-reader"></i>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Missão, Visão e Valores -->
+        <section class="mvv-section">
+            <div class="mvv-grid">
+                <div class="mvv-card missao">
+                    <div class="mvv-icon">
+                        <i class="fas fa-bullseye"></i>
+                    </div>
+                    <h3>Missão</h3>
+                    <p>
+                        Facilitar o acesso a e-books de qualidade, oferecendo uma experiência de compra rápida, 
+                        segura e intuitiva. Acreditamos que a leitura transforma vidas e queremos estar presentes 
+                        em cada jornada de aprendizado.
+                    </p>
+                </div>
+
+                <div class="mvv-card visao">
+                    <div class="mvv-icon">
+                        <i class="fas fa-eye"></i>
+                    </div>
+                    <h3>Visão</h3>
+                    <p>
+                        Ser a maior e mais confiável plataforma de e-books do Brasil, reconhecida pela qualidade 
+                        do acervo, excelência no atendimento e compromisso com a educação e cultura do país.
+                    </p>
+                </div>
+
+                <div class="mvv-card valores">
+                    <div class="mvv-icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <h3>Valores</h3>
+                    <ul>
+                        <li><i class="fas fa-check"></i> Confiança e transparência</li>
+                        <li><i class="fas fa-check"></i> Paixão pela leitura</li>
+                        <li><i class="fas fa-check"></i> Inovação constante</li>
+                        <li><i class="fas fa-check"></i> Compromisso com a educação</li>
+                        <li><i class="fas fa-check"></i> Excelência no atendimento</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Linha do Tempo -->
+        <section class="timeline-section">
+            <h2>📈 Nossa Evolução</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-marker">
+                        <span>2020</span>
+                    </div>
+                    <div class="timeline-content">
+                        <h4>🌱 Fundação</h4>
+                        <p>ClicLeitura nasce no Acre com 50 títulos cuidadosamente selecionados</p>
+                        <div class="timeline-stats">
+                            <span class="stat-badge">50 títulos</span>
+                            <span class="stat-badge">100 clientes</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-marker">
+                        <span>2022</span>
+                    </div>
+                    <div class="timeline-content">
+                        <h4>🚀 Expansão Regional</h4>
+                        <p>Alcançamos toda a região Norte e expandimos nosso catálogo</p>
+                        <div class="timeline-stats">
+                            <span class="stat-badge">500+ títulos</span>
+                            <span class="stat-badge">2.000+ clientes</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-marker">
+                        <span>2024</span>
+                    </div>
+                    <div class="timeline-content">
+                        <h4>🌎 Plataforma Nacional</h4>
+                        <p>Presença em todo o Brasil com parcerias estratégicas</p>
+                        <div class="timeline-stats">
+                            <span class="stat-badge">2.000+ títulos</span>
+                            <span class="stat-badge">5.000+ clientes</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-marker">
+                        <span>2025</span>
+                    </div>
+                    <div class="timeline-content">
+                        <h4>👑 Líder em E-books</h4>
+                        <p>Referência nacional em qualidade e atendimento</p>
+                        <div class="timeline-stats">
+                            <span class="stat-badge">5.000+ títulos</span>
+                            <span class="stat-badge">10.000+ clientes</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Diferenciais -->
+        <section class="diferenciais-section">
+            <h2>💡 Por Que Escolher a ClicLeitura?</h2>
+            <div class="diferenciais-grid">
+                <div class="diferencial-card">
+                    <i class="fas fa-bolt"></i>
+                    <h4>Entrega Instantânea</h4>
+                    <p>Receba seu e-book diretamente no e-mail em poucos minutos após a compra</p>
+                </div>
+
+                <div class="diferencial-card">
+                    <i class="fas fa-lock"></i>
+                    <h4>Pagamento Seguro</h4>
+                    <p>Transações 100% protegidas com criptografia de ponta</p>
+                </div>
+
+                <div class="diferencial-card">
+                    <i class="fas fa-mobile-alt"></i>
+                    <h4>Leia em Qualquer Lugar</h4>
+                    <p>Compatível com todos os dispositivos: celular, tablet, PC e e-readers</p>
+                </div>
+
+                <div class="diferencial-card">
+                    <i class="fas fa-headset"></i>
+                    <h4>Suporte Dedicado</h4>
+                    <p>Equipe pronta para ajudar você a qualquer momento</p>
+                </div>
+
+                <div class="diferencial-card">
+                    <i class="fas fa-tags"></i>
+                    <h4>Melhores Preços</h4>
+                    <p>Ofertas exclusivas e condições especiais para você</p>
+                </div>
+
+                <div class="diferencial-card">
+                    <i class="fas fa-book-open"></i>
+                    <h4>Catálogo Atualizado</h4>
+                    <p>Novos títulos todas as semanas em diversas categorias</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Estatísticas -->
+        <section class="stats-section">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <i class="fas fa-book"></i>
+                    <h3>5.000+</h3>
+                    <p>Títulos Disponíveis</p>
+                </div>
+
+                <div class="stat-item">
+                    <i class="fas fa-users"></i>
+                    <h3>10.000+</h3>
+                    <p>Clientes Satisfeitos</p>
+                </div>
+
+                <div class="stat-item">
+                    <i class="fas fa-star"></i>
+                    <h3>4.8/5</h3>
+                    <p>Avaliação Média</p>
+                </div>
+
+                <div class="stat-item">
+                    <i class="fas fa-trophy"></i>
+                    <h3>5 Anos</h3>
+                    <p>De Experiência</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Call to Action -->
+        <section class="cta-section">
+            <div class="cta-content">
+                <h2>Pronto para Começar Sua Jornada de Leitura?</h2>
+                <p>Junte-se a milhares de leitores e descubra um mundo de conhecimento</p>
+                <div class="cta-buttons">
+                    <a href="{{ url_for('index') }}#shop" class="btn-primary">
+                        <i class="fas fa-book"></i> Explorar E-books
+                    </a>
+                    <a href="{{ url_for('contato_page') }}" class="btn-secondary">
+                        <i class="fas fa-envelope"></i> Fale Conosco
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Citação -->
+        <section class="quote-section">
+            <blockquote>
+                <i class="fas fa-quote-left"></i>
+                <p>"Nossa meta é simples: um país que lê é um país que cresce. E estamos aqui para fazer parte dessa transformação."</p>
+                <footer>— Equipe ClicLeitura</footer>
+            </blockquote>
+        </section>
+    </main>
+
+    <!-- RODAPÉ -->
+    <footer class="footer">
+        <div class="footer-container">
+            <!-- Coluna 1: Sobre -->
+            <div class="footer-column">
+                <h3>ClicLeitura</h3>
+                <p>Sua livraria digital com os melhores e-books. Leitura de qualidade ao alcance de um clique.</p>
+                <div class="social-icons">
+                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+
+            <!-- Coluna 2: Links Rápidos -->
+            <div class="footer-column">
+                <h3>Links Rápidos</h3>
+                <ul class="footer-links">
+                    <li><a href="{{ url_for('index') }}">Home</a></li>
+                    <li><a href="{{ url_for('sobre_page') }}">Sobre Nós</a></li>
+                    <li><a href="{{ url_for('contato_page') }}">Contato</a></li>
+                    <li><a href="{{ url_for('localizacao_page') }}">Localização</a></li>
+                    <li><a href="{{ url_for('faq_page') }}">FAQ</a></li>
+                </ul>
+            </div>
+
+            <!-- Coluna 3: Contato -->
+            <div class="footer-column">
+                <h3>Contato</h3>
+                <ul class="contact-info">
+                    <li>
+                        <i class="fas fa-phone"></i>
+                        <a href="tel:+556892191861">(68) 99219-1861</a>
+                    </li>
+                    <li>
+                        <i class="fas fa-envelope"></i>
+                        <a href="mailto:contato@clicleitura.com">contato@clicleitura.com</a>
+                    </li>
+                    <li>
+                        <i class="fas fa-map-marker-alt"></i>
+                        <a href="{{ url_for('localizacao_page') }}">Rio Branco - AC</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; 2025 ClicLeitura. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+</body>
+</html>

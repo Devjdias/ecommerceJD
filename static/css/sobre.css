@@ -1,0 +1,604 @@
+/* ===== PÁGINA SOBRE - CLICLEITURA ===== */
+
+/* VARIÁVEIS */
+:root {
+    --vinho: #702727;
+    --vinho-escuro: #4d1b1b;
+    --vinho-claro: #8B3A3A;
+    --cinza-texto: #555;
+    --cinza-claro: #f8f9fa;
+}
+
+/* CABEÇALHO */
+.header {
+    background-color: #DAD9D9;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.header section {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 1.5rem 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.navbar {
+    display: flex;
+    gap: 2rem;
+}
+
+.navbar a {
+    font-size: 1.6rem;
+    color: var(--vinho);
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.navbar a:hover {
+    color: var(--vinho-escuro);
+}
+
+.icons img {
+    height: 30px;
+    cursor: pointer;
+}
+
+/* HERO */
+.hero-sobre {
+    background: linear-gradient(135deg, var(--vinho) 0%, var(--vinho-escuro) 100%);
+    color: white;
+    text-align: center;
+    padding: 6rem 2rem;
+}
+
+.hero-sobre h1 {
+    font-size: 4.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.hero-sobre p {
+    font-size: 1.8rem;
+    opacity: 0.9;
+}
+
+/* CONTAINER PRINCIPAL */
+.container-sobre {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 4rem 2rem;
+}
+
+.section-title {
+    font-size: 3rem;
+    color: var(--vinho);
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+/* HISTÓRIA */
+.historia-content {
+    display: flex;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+    margin-bottom: 6rem;
+}
+
+.historia-text p {
+    font-size: 1.6rem;
+    line-height: 1.8;
+    color: var(--cinza-texto);
+    margin-bottom: 1.5rem;
+}
+
+.historia-image {
+    position: relative;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+.historia-image img {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+}
+
+.image-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+    padding: 2rem;
+    color: white;
+}
+
+.image-overlay h3 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.image-overlay p {
+    font-size: 1.4rem;
+}
+
+/* MISSÃO, VISÃO E VALORES */
+.mvv-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 3rem;
+    margin-bottom: 6rem;
+}
+
+.mvv-card {
+    background: white;
+    padding: 3rem;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: transform 0.3s;
+}
+
+.mvv-card:hover {
+    transform: translateY(-10px);
+}
+
+.mvv-icon {
+    font-size: 4rem;
+    margin-bottom: 1.5rem;
+}
+
+.missao .mvv-icon {
+    color: #e74c3c;
+}
+
+.visao .mvv-icon {
+    color: #3498db;
+}
+
+.valores .mvv-icon {
+    color: #f39c12;
+}
+
+.mvv-card h3 {
+    font-size: 2.2rem;
+    color: var(--vinho);
+    margin-bottom: 1.5rem;
+}
+
+.mvv-card p {
+    font-size: 1.5rem;
+    color: var(--cinza-texto);
+    line-height: 1.7;
+}
+
+.mvv-card ul {
+    list-style: none;
+    text-align: left;
+}
+
+.mvv-card ul li {
+    font-size: 1.5rem;
+    color: var(--cinza-texto);
+    margin-bottom: 1rem;
+}
+
+/* LINHA DO TEMPO */
+.timeline-section {
+    margin-bottom: 6rem;
+    background: var(--cinza-claro);
+    padding: 4rem;
+    border-radius: 20px;
+}
+
+.timeline {
+    position: relative;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 2rem 0;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 100%;
+    background: var(--vinho);
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 4rem;
+    display: flex;
+    align-items: center;
+}
+
+.timeline-item:nth-child(odd) {
+    flex-direction: row;
+}
+
+.timeline-item:nth-child(even) {
+    flex-direction: row-reverse;
+}
+
+.timeline-content {
+    flex: 1;
+    padding: 2rem;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.timeline-date {
+    flex: 0 0 150px;
+    text-align: center;
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--vinho);
+}
+
+.timeline-marker {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 20px;
+    height: 20px;
+    background: var(--vinho);
+    border: 4px solid white;
+    border-radius: 50%;
+    z-index: 1;
+}
+
+.timeline-content h3 {
+    font-size: 2rem;
+    color: var(--vinho);
+    margin-bottom: 1rem;
+}
+
+.timeline-content p {
+    font-size: 1.5rem;
+    color: var(--cinza-texto);
+}
+
+/* DIFERENCIAIS */
+.diferenciais-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2.5rem;
+    margin-bottom: 6rem;
+}
+
+.diferencial-card {
+    background: white;
+    padding: 2.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s;
+}
+
+.diferencial-card:hover {
+    transform: translateY(-5px);
+}
+
+.diferencial-card i {
+    font-size: 3rem;
+    color: var(--vinho);
+    margin-bottom: 1.5rem;
+}
+
+.diferencial-card h3 {
+    font-size: 1.8rem;
+    color: var(--vinho);
+    margin-bottom: 1rem;
+}
+
+.diferencial-card p {
+    font-size: 1.4rem;
+    color: var(--cinza-texto);
+    line-height: 1.6;
+}
+
+/* ESTATÍSTICAS */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
+    margin-bottom: 6rem;
+    text-align: center;
+}
+
+.stat-card {
+    background: linear-gradient(135deg, var(--vinho), var(--vinho-claro));
+    color: white;
+    padding: 3rem 2rem;
+    border-radius: 15px;
+}
+
+.stat-number {
+    font-size: 4rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    font-size: 1.5rem;
+    opacity: 0.9;
+}
+
+/* CALL TO ACTION */
+.cta-section {
+    background: linear-gradient(135deg, var(--vinho), var(--vinho-escuro));
+    color: white;
+    text-align: center;
+    padding: 5rem 2rem;
+    border-radius: 20px;
+    margin-bottom: 6rem;
+}
+
+.cta-section h2 {
+    font-size: 3.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.cta-section p {
+    font-size: 1.8rem;
+    margin-bottom: 3rem;
+    opacity: 0.9;
+}
+
+.cta-buttons {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+}
+
+.btn {
+    padding: 1.5rem 3rem;
+    font-size: 1.6rem;
+    border-radius: 50px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 1rem;
+    transition: all 0.3s;
+}
+
+.btn-primary {
+    background: white;
+    color: var(--vinho);
+}
+
+.btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.btn-secondary {
+    background: transparent;
+    color: white;
+    border: 2px solid white;
+}
+
+.btn-secondary:hover {
+    background: white;
+    color: var(--vinho);
+    transform: translateY(-3px);
+}
+
+/* CITAÇÃO */
+.quote-section {
+    margin-bottom: 4rem;
+    text-align: center;
+}
+
+.quote-section blockquote {
+    background: var(--cinza-claro);
+    padding: 4rem;
+    border-radius: 20px;
+    border-left: 5px solid var(--vinho);
+}
+
+.quote-section i {
+    font-size: 4rem;
+    color: var(--vinho);
+    opacity: 0.3;
+    margin-bottom: 2rem;
+}
+
+.quote-section p {
+    font-size: 2rem;
+    font-style: italic;
+    color: var(--cinza-texto);
+    line-height: 1.8;
+    margin-bottom: 2rem;
+}
+
+.quote-section footer {
+    font-size: 1.6rem;
+    color: var(--vinho);
+    font-weight: 600;
+}
+
+/* RODAPÉ */
+.footer {
+    background: #2c2c2c;
+    color: white;
+    padding: 4rem 2rem 2rem;
+}
+
+.footer-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    gap: 3rem;
+    margin-bottom: 2rem;
+}
+
+.footer-column {
+    flex: 1;
+    min-width: 250px;
+}
+
+.footer-column h3 {
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+}
+
+.footer-column p {
+    font-size: 1.4rem;
+    line-height: 1.6;
+    opacity: 0.8;
+}
+
+.social-icons {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.social-icons a {
+    width: 35px;
+    height: 35px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-decoration: none;
+    transition: background 0.3s;
+}
+
+.social-icons a:hover {
+    background: var(--vinho);
+}
+
+.footer-links {
+    list-style: none;
+}
+
+.footer-links li {
+    margin-bottom: 0.8rem;
+}
+
+.footer-links a {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1.4rem;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.footer-links a:hover {
+    color: white;
+}
+
+.contact-info {
+    list-style: none;
+}
+
+.contact-info li {
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.contact-info i {
+    color: var(--vinho);
+    font-size: 1.6rem;
+}
+
+.contact-info a {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1.4rem;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.contact-info a:hover {
+    color: white;
+}
+
+.footer-bottom {
+    text-align: center;
+    padding-top: 2rem;
+    margin-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.footer-bottom p {
+    font-size: 1.3rem;
+    opacity: 0.6;
+}
+
+/* RESPONSIVO */
+@media (max-width: 1200px) {
+    .mvv-grid,
+    .diferenciais-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .header section {
+        padding: 1rem 2rem;
+        flex-wrap: wrap;
+    }
+    
+    .navbar {
+        flex-direction: column;
+        gap: 1rem;
+        width: 100%;
+    }
+    
+    .hero-sobre h1 {
+        font-size: 3rem;
+    }
+    
+    .historia-content {
+        grid-template-columns: 1fr;
+    }
+    
+    .mvv-grid,
+    .diferenciais-grid,
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .timeline::before {
+        left: 20px;
+    }
+    
+    .timeline-item {
+        flex-direction: row !important;
+    }
+    
+    .timeline-marker {
+        left: 20px;
+    }
+    
+    .timeline-date {
+        flex: 0 0 80px;
+    }
+    
+    .cta-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .footer-container {
+        flex-direction: column;
+    }
+}

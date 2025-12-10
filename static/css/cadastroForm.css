@@ -1,0 +1,158 @@
+body {
+  font-family: "Poppins", sans-serif;
+  background: #f8f8f8;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+.container {
+  width: 900px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+}
+
+.signup-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.signup-form {
+  width: 60%;
+}
+
+.form-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 25px;
+}
+
+.form-group {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.form-group i {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #000000;
+  font-size: 14px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px 10px 10px 35px;
+  border: none;
+  border-bottom: 1px solid #ccc;
+  font-size: 15px;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.form-group input:focus {
+  border-color: #520711;
+}
+
+.form-group.agree {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+}
+
+.form-group.agree label {
+  margin-left: 8px;
+  color: #555;
+}
+
+.form-group.agree a {
+  color: #450210;
+  text-decoration: none;
+}
+
+.form-button {
+  text-align: center;
+}
+
+.form-submit {
+  width: 100%;
+  background: #6c7ae0;
+  color: #fff;
+  border: none;
+  padding: 12px;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.form-submit:hover {
+  background: #6d0a1b;
+}
+
+.signup-image {
+  width: 45%;
+  text-align: center;
+}
+
+.signup-image img {
+  width: 85%;
+}
+
+.signup-image-link {
+  display: inline-block;
+  margin-top: 15px;
+  font-size: 14px;
+  color: #0a1bad;
+  text-decoration: none;
+}
+
+.signup-image-link:hover {
+  color: #4e0e11;
+}
+
+.agree-terms-wrapper {
+  display: flex;
+  align-items: center;
+  padding: 0;
+  margin-bottom: 20px;
+}
+
+.agree-terms-wrapper input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  flex-shrink: 0;
+  position: static;
+}
+
+.agree-terms-wrapper .label-agree-term {
+  display: block;
+  flex-grow: 1;
+  padding: 0 0 0 8px;
+  margin: 0;
+  line-height: 1.4;
+  font-size: 14px;
+}
+
+.agree-terms-wrapper a {
+  color: #6a5acd;
+  text-decoration: underline;
+
+}
+
+a:hover{
+  text-decoration: none;
+  color: #5c0307;
+}

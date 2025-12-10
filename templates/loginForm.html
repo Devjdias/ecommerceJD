@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/iconLivro.png') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/reset.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/loginForm.css') }}">
+    <title>Login - ClicLeitura</title>
+
+</head>
+
+<body>
+    <div class="main">
+
+        <section class="sign-in">
+            <div class="container">
+                <div class="signin-content">
+                    <div class="signin-image">
+                        <figure>
+                            <img src="../static/images/imgLogin.jpg" alt="sign in image">
+                        </figure>
+                        <a href="/cadastro" class="signup-image-link">Criar Uma Conta</a>
+                    </div>
+
+                    <div class="signin-form">
+                        <h2 class="form-title">Seja Bem Vindo</h2>
+
+                        <form class="register-form" id="login-form">
+
+                            <div class="form-group">
+                                <label for="your_name"><i class="fa fa-user"></i></label>
+                                <input type="text" name="your_name" id="your_name" placeholder="Seu Nome" />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="your_pass"><i class="fa fa-lock"></i></label>
+                                <input type="password" name="your_pass" id="your_pass" placeholder="Sua Senha" />
+                            </div>
+
+                            <div class="form-group form-button">
+                                <input type="submit" name="signin" id="signin" class="form-submit" value="Entrar" />
+                            </div>
+
+                        </form>
+
+                        <div class="admin-link" style="text-align: center; margin-top: 20px;">
+                            <a href="/admin/login" style="color: #702727; text-decoration: none; font-size: 14px;">
+                                <i class="fas fa-user-shield"></i> Acesso Administrativo
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('your_name').value;
+            const senha = document.getElementById('your_pass').value;
+            
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: email, senha: senha })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    alert('✅ Login realizado com sucesso! Bem-vindo, ' + data.usuario.nome + '!');
+                    // Salvar dados do usuário
+                    localStorage.setItem('usuario', JSON.stringify(data.usuario));
+                    
+                    // Verificar se há redirecionamento pendente
+                    const redirect = sessionStorage.getItem('redirectAfterLogin');
+                    if (redirect) {
+                        sessionStorage.removeItem('redirectAfterLogin');
+                        window.location.href = redirect;
+                    } else {
+                        window.location.href = '/';
+                    }
+                } else {
+                    alert('❌ ' + data.error);
+                }
+            } catch (error) {
+                alert('❌ Erro ao fazer login: ' + error.message);
+            }
+        });
+    </script>
+</body>
+</html>

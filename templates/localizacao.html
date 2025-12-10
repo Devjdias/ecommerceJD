@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/localizacao.css') }}" />
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/iconLivro.png') }}">
+    <title>Nossa Localização - ClicLeitura</title>
+</head>
+<body>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+        }
+
+        /* HEADER */
+        .header {
+            background: linear-gradient(135deg, #702727 0%, #4d1b1b 100%);
+            padding: 1.5rem 5%;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo img {
+            height: 60px;
+            transition: transform 0.3s;
+        }
+
+        .logo:hover img {
+            transform: scale(1.05);
+        }
+
+        .navbar {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+        }
+
+        .navbar a:hover {
+            background: rgba(255,255,255,0.1);
+            transform: translateY(-2px);
+        }
+
+        .icons {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .icons a, .icons img {
+            transition: transform 0.3s;
+        }
+
+        .icons a:hover, .icons img:hover {
+            transform: scale(1.1);
+        }
+
+        /* CONTAINER PRINCIPAL */
+        .localizacao-container {
+            max-width: 1400px;
+            margin: 3rem auto;
+            padding: 0 5%;
+        }
+
+        .page-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .page-title h1 {
+            font-size: 2.5rem;
+            color: #702727;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-title p {
+            font-size: 1.2rem;
+            color: #666;
+        }
+
+        /* GRID DE CONTEÚDO */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        /* INFORMAÇÕES */
+        .info-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .info-section h2 {
+            color: #702727;
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1rem;
+            border-left: 3px solid #702727;
+            background: #f9f9f9;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            transition: all 0.3s;
+        }
+
+        .info-item:hover {
+            background: #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transform: translateX(5px);
+        }
+
+        .info-item i {
+            color: #702727;
+            font-size: 1.5rem;
+            margin-top: 0.2rem;
+        }
+
+        .info-content h3 {
+            color: #702727;
+            font-size: 1.1rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .info-content p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .info-content a {
+            color: #702727;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .info-content a:hover {
+            color: #4d1b1b;
+            text-decoration: underline;
+        }
+
+        /* HORÁRIO */
+        .horario-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .horario-section h2 {
+            color: #702727;
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .horario-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 1rem;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .horario-item:last-child {
+            border-bottom: none;
+        }
+
+        .horario-dia {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .horario-hora {
+            color: #702727;
+            font-weight: 500;
+        }
+
+        .destaque-box {
+            background: linear-gradient(135deg, #702727 0%, #4d1b1b 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-top: 1.5rem;
+            text-align: center;
+        }
+
+        .destaque-box i {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .destaque-box h3 {
+            margin-bottom: 0.5rem;
+        }
+
+        /* MAPA */
+        .map-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 3rem;
+        }
+
+        .map-section h2 {
+            color: #702727;
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .map-container {
+            width: 100%;
+            height: 500px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .map-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* BOTÕES DE AÇÃO */
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-action {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+            text-decoration: none;
+            color: white;
+        }
+
+        .btn-primary {
+            background: #702727;
+        }
+
+        .btn-primary:hover {
+            background: #4d1b1b;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(112, 39, 39, 0.3);
+        }
+
+        .btn-secondary {
+            background: #27ae60;
+        }
+
+        .btn-secondary:hover {
+            background: #229954;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
+        }
+
+        /* FOOTER */
+        .footer {
+            background: linear-gradient(135deg, #702727 0%, #4d1b1b 100%);
+            color: white;
+            padding: 3rem 5% 1rem;
+            margin-top: 4rem;
+        }
+
+        .footer-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-column h3, .footer-column h4 {
+            margin-bottom: 1rem;
+            color: white;
+        }
+
+        .footer-column p, .footer-column ul {
+            color: rgba(255,255,255,0.8);
+            line-height: 1.8;
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-column a {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-column a:hover {
+            color: white;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-icons a {
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .social-icons a:hover {
+            background: white;
+            color: #702727;
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.8);
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 968px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .navbar {
+                display: none;
+            }
+
+            .page-title h1 {
+                font-size: 2rem;
+            }
+
+            .map-container {
+                height: 400px;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .btn-action {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- HEADER -->
+    <header class="header">
+        <section>
+            <a href="{{ url_for('index') }}" class="logo">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo ClicLeitura">
+            </a>
+
+            <nav class="navbar">
+                <a href="{{ url_for('index') }}">Home</a>
+                <a href="{{ url_for('sobre_page') }}">Sobre</a>
+                <a href="{{ url_for('index') }}#shop">E-books</a>
+                <a href="{{ url_for('contato_page') }}">Contato</a>
+                <a href="{{ url_for('localizacao_page') }}" style="background: rgba(255,255,255,0.1);">Localização</a>
+            </nav>
+
+            <div class="icons">
+                <a href="{{ url_for('login_page') }}" id="loginLink">
+                    <img width="30" height="30" src="https://img.icons8.com/?size=100&id=24220&format=png&color=FFFFFF"
+                        alt="Entrar na conta" style="cursor: pointer;" />
+                </a>
+                <a href="{{ url_for('perfil_page') }}" id="perfilLink" style="display: none;">
+                    <img width="30" height="30" src="https://img.icons8.com/?size=100&id=7820&format=png&color=FFFFFF"
+                        alt="Meu Perfil" style="cursor: pointer;" title="Meu Perfil" />
+                </a>
+            </div>
+        </section>
+    </header>
+
+    <!-- CONTAINER PRINCIPAL -->
+    <div class="localizacao-container">
+        <!-- TÍTULO DA PÁGINA -->
+        <div class="page-title">
+            <h1><i class="fas fa-map-marker-alt"></i> Onde Estamos</h1>
+            <p>Confira nossa localização e como chegar até nós!</p>
+        </div>
+
+        <!-- GRID DE INFORMAÇÕES -->
+        <div class="content-grid">
+            <!-- INFORMAÇÕES DE CONTATO -->
+            <div class="info-section">
+                <h2><i class="fas fa-info-circle"></i> Informações de Contato</h2>
+                
+                <div class="info-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <div class="info-content">
+                        <h3>Endereço</h3>
+                        <p>Rua das Flores, 123<br>
+                        Centro - Rio Branco, AC<br>
+                        CEP: 69900-000</p>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <i class="fas fa-phone"></i>
+                    <div class="info-content">
+                        <h3>Telefone</h3>
+                        <p><a href="tel:+5568999999999">(68) 9999-9999</a><br>
+                        <a href="tel:+5568999999998">(68) 9999-9998</a></p>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <i class="fas fa-envelope"></i>
+                    <div class="info-content">
+                        <h3>E-mail</h3>
+                        <p><a href="mailto:contato@clicleitura.com">contato@clicleitura.com</a><br>
+                        <a href="mailto:1diasjosilene@gmail.com">1diasjosilene@gmail.com</a></p>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <i class="fab fa-whatsapp"></i>
+                    <div class="info-content">
+                        <h3>WhatsApp</h3>
+                        <p><a href="https://wa.me/5568999999999" target="_blank">(68) 99999-9999</a><br>
+                        Atendimento rápido via WhatsApp</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- HORÁRIO DE ATENDIMENTO -->
+            <div class="horario-section">
+                <h2><i class="fas fa-clock"></i> Horário de Atendimento</h2>
+                
+                <div class="horario-item">
+                    <span class="horario-dia">Segunda-feira</span>
+                    <span class="horario-hora">08:00 - 18:00</span>
+                </div>
+                <div class="horario-item">
+                    <span class="horario-dia">Terça-feira</span>
+                    <span class="horario-hora">08:00 - 18:00</span>
+                </div>
+                <div class="horario-item">
+                    <span class="horario-dia">Quarta-feira</span>
+                    <span class="horario-hora">08:00 - 18:00</span>
+                </div>
+                <div class="horario-item">
+                    <span class="horario-dia">Quinta-feira</span>
+                    <span class="horario-hora">08:00 - 18:00</span>
+                </div>
+                <div class="horario-item">
+                    <span class="horario-dia">Sexta-feira</span>
+                    <span class="horario-hora">08:00 - 17:00</span>
+                </div>
+                <div class="horario-item">
+                    <span class="horario-dia">Sábado</span>
+                    <span class="horario-hora">Fechado</span>
+                </div>
+                <div class="horario-item">
+                    <span class="horario-dia">Domingo</span>
+                    <span class="horario-hora">Fechado</span>
+                </div>
+
+                <div class="destaque-box">
+                    <i class="fas fa-laptop"></i>
+                    <h3>Livraria 100% Digital</h3>
+                    <p>Nossos e-books estão disponíveis 24/7 para compra online. Receba no seu e-mail em minutos!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- MAPA -->
+        <div class="map-section">
+            <h2><i class="fas fa-map"></i> Localização no Mapa</h2>
+            <div class="map-container">
+                <!-- Mapa do Google Maps (Rio Branco - AC, Centro) -->
+                <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15879.849193362956!2d-67.81644!3d-9.97497!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x91e1c58462c6cfaf%3A0x63ef7b2bf7c8f92!2sCentro%2C%20Rio%20Branco%20-%20AC!5e0!3m2!1spt-BR!2sbr!4v1234567890123!5m2!1spt-BR!2sbr" 
+                    allowfullscreen="" 
+                    loading="lazy" 
+                    referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+            </div>
+
+            <div class="action-buttons">
+                <a href="https://www.google.com/maps/dir//Centro,+Rio+Branco+-+AC" target="_blank" class="btn-action btn-primary">
+                    <i class="fas fa-directions"></i> Como Chegar
+                </a>
+                <a href="https://wa.me/5568999999999?text=Olá!%20Gostaria%20de%20saber%20mais%20sobre%20a%20ClicLeitura" target="_blank" class="btn-action btn-secondary">
+                    <i class="fab fa-whatsapp"></i> Fale Conosco via WhatsApp
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-container">
+            <!-- Coluna 1: Sobre -->
+            <div class="footer-column">
+                <h3>ClicLeitura</h3>
+                <p>Sua livraria digital com os melhores e-books. Leitura de qualidade ao alcance de um clique.</p>
+                <div class="social-icons">
+                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+
+            <!-- Coluna 2: Links Rápidos -->
+            <div class="footer-column">
+                <h4>Links Rápidos</h4>
+                <ul>
+                    <li><a href="{{ url_for('index') }}">Home</a></li>
+                    <li><a href="{{ url_for('index') }}#sobre">Sobre Nós</a></li>
+                    <li><a href="{{ url_for('index') }}#shop">Catálogo</a></li>
+                    <li><a href="{{ url_for('terms_page') }}">Termos de Serviço</a></li>
+                </ul>
+            </div>
+
+            <!-- Coluna 3: Atendimento -->
+            <div class="footer-column">
+                <h4>Atendimento</h4>
+                <ul>
+                    <li><a href="{{ url_for('faq_page') }}">FAQ</a></li>
+                    <li><a href="{{ url_for('terms_page') }}">Política de Privacidade</a></li>
+                    <li><a href="{{ url_for('faq_page') }}">Formas de Pagamento</a></li>
+                    <li><a href="{{ url_for('contato_page') }}">Contato</a></li>
+                </ul>
+            </div>
+
+            <!-- Coluna 4: Contato -->
+            <div class="footer-column">
+                <h4>Contato</h4>
+                <ul class="contact-info">
+                    <li><i class="fas fa-envelope"></i> <a href="{{ url_for('contato_page') }}" style="color: inherit;">contato@clicleitura.com</a></li>
+                    <li><i class="fas fa-phone"></i> <a href="tel:+5568999999999" style="color: inherit;">(68) 9999-9999</a></li>
+                    <li><i class="fas fa-map-marker-alt"></i> Rio Branco, AC</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; 2025 ClicLeitura. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Verificar se usuário está logado
+        window.addEventListener('DOMContentLoaded', () => {
+            const usuario = JSON.parse(localStorage.getItem('usuario') || 'null');
+            const loginLink = document.getElementById('loginLink');
+            const perfilLink = document.getElementById('perfilLink');
+            
+            if (usuario) {
+                loginLink.style.display = 'none';
+                perfilLink.style.display = 'inline';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap');
+
+body {
+  font-family: "Montserrat", sans-serif;
+}
+
+h1{
+  color: #202124;
+  font-size: 30px;
+}
+h2 {
+  color: #202124;
+  font-size: 20px;
+}
+
+.btn-danger {
+  background-color: #7c0e0e;
+  border: none;
+}
+
+.btn-danger:hover {
+  background-color: #46020e;
+}

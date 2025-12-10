@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/carrinho.css') }}" />
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/iconLivro.png') }}">
+    <title>ClicLeitura - E-books</title>
+</head>
+
+<body>
+    <!-- HEADER -->
+    <header class="header">
+        <section>
+            <a href="{{ url_for('index') }}" class="logo">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo de livro">
+            </a>
+
+            <nav class="navbar">
+                <a href="#home">Home</a>
+                <a href="{{ url_for('sobre_page') }}">Sobre</a>
+                <a href="#shop">E-books</a>
+                <a href="{{ url_for('contato_page') }}">Contato</a>
+                <a href="{{ url_for('localizacao_page') }}">Localização</a>
+                <a href="{{ url_for('faq_page') }}">FAQ</a>
+            </nav>
+
+            <div class="icons">
+                <div id="carrinhoIcon" style="position: relative; display: inline-block; cursor: pointer;">
+                    <img width="30" height="30" src="https://img.icons8.com/?size=100&id=9671&format=png&color=702727"
+                        alt="Carrinho de Compra" style="pointer-events: none;">
+                    <span id="carrinhoCount" style="display: none; position: absolute; top: -8px; right: -8px; background: #e74c3c; color: white; border-radius: 50%; width: 20px; height: 20px; font-size: 12px; font-weight: bold; align-items: center; justify-content: center; pointer-events: none;">0</span>
+                </div>
+                <a href="{{ url_for('login_page') }}" id="loginLink">
+                    <img width="30" height="30" src="https://img.icons8.com/?size=100&id=24220&format=png&color=702727"
+                        alt="Entrar na conta" style="cursor: pointer;" />
+                </a>
+                <a href="{{ url_for('perfil_page') }}" id="perfilLink" style="display: none;">
+                    <img width="30" height="30" src="https://img.icons8.com/?size=100&id=7820&format=png&color=702727"
+                        alt="Meu Perfil" style="cursor: pointer;" title="Meu Perfil" />
+                </a>
+                <span id="userInfo" style="display: none; color: #702727; font-weight: bold; margin-left: 10px;"></span>
+                <button id="logoutBtn" style="display: none; margin-left: 10px; padding: 5px 15px; background: #702727; color: white; border: none; border-radius: 4px; cursor: pointer;">Sair</button>
+            </div>
+        </section>
+    </header>
+
+    <!-- MODAL DO CARRINHO -->
+    <div id="carrinhoModal" class="carrinho-modal" style="display: none;">
+        <div class="carrinho-content">
+            <div class="carrinho-header">
+                <h2><i class="fas fa-shopping-cart"></i> Meu Carrinho</h2>
+                <button class="carrinho-close" onclick="fecharCarrinho()">&times;</button>
+            </div>
+            <div id="carrinhoItens" class="carrinho-itens">
+                <!-- Itens do carrinho serão inseridos aqui -->
+            </div>
+            <div class="carrinho-footer">
+                <div class="carrinho-total">
+                    <span>Total:</span>
+                    <span id="carrinhoTotal">R$ 0,00</span>
+                </div>
+                <button class="btn-finalizar" onclick="fecharPedidoEPagarComPix()">
+                    <i class="fas fa-qrcode"></i> Fechar Pedido e Pagar com PIX
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE PAGAMENTO PIX -->
+    <div id="pixModal" class="carrinho-modal" style="display: none;">
+        <div class="carrinho-content" style="max-width: 600px;">
+            <div class="carrinho-header">
+                <h2><i class="fas fa-qrcode"></i> Pagamento PIX</h2>
+                <button class="carrinho-close" onclick="fecharPixModal()">&times;</button>
+            </div>
+            <div class="pix-content" style="padding: 2rem; text-align: center;">
+                <div id="pixInfo">
+                    <!-- Informações do PIX serão inseridas aqui -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="home-container">
+        <div class="hero-left">
+            <section id="sobre">
+                <div class="content">
+                    <h3>Bem-vindo à ClicLeitura</h3>
+                    <p>
+                        Sua livraria digital com os melhores e-books. Aqui você encontra títulos selecionados 
+                        com cuidado, pensados para oferecer conhecimento, praticidade e uma experiência de leitura 
+                        simples e acessível.
+                    </p>
+                    <p>
+                        Escolha o livro, faça o pagamento e receba seu e-book diretamente no e-mail, em poucos minutos.
+                    </p>
+                </div>
+            </section>
+        </div>
+
+        <div class="img-principal">
+            <img src="{{ url_for('static', filename='images/principal.png') }}" alt="Livro destaque da região">
+        </div>
+    </div>
+
+    <!-- SEÇÃO DE PRODUTOS -->
+    <main class="produtos" id="shop">
+        {% for livro in livros %}
+        <div class="card">
+            {% if livro['imagem'].startswith('http') %}
+                <img src="{{ livro['imagem'] }}" alt="{{ livro['titulo'] }}" onerror="this.src='{{ url_for('static', filename='images/default-book.jpg') }}'" />
+            {% else %}
+                <img src="{{ url_for('static', filename='images/' + livro['imagem']) }}" alt="{{ livro['titulo'] }}" />
+            {% endif %}
+            <h4>{{ livro['titulo'][:60] }}{% if livro['titulo']|length > 60 %}...{% endif %}</h4>
+            <p>Por {{ livro['autor'][:40] }}{% if livro['autor']|length > 40 %}...{% endif %}</p>
+            <h3>R$ {{ "%.2f"|format(livro['preco']) }}</h3>
+            <button onclick="adicionarAoCarrinho({{ livro['id'] }})" style="margin-bottom: 0.5rem;">
+                <i class="fas fa-cart-plus"></i> Adicionar ao Carrinho
+            </button>
+            <a href="{{ url_for('livro', livro_id=livro['id']) }}">
+                <button>Ver detalhes</button>
+            </a>
+        </div>
+        {% endfor %}
+    </main>
+
+    <!-- RODAPÉ -->
+    <footer class="footer">
+        <div class="footer-container">
+            <!-- Coluna 1: Sobre -->
+            <div class="footer-column">
+                <h3>ClicLeitura</h3>
+                <p>Sua livraria digital com os melhores e-books. Leitura de qualidade ao alcance de um clique.</p>
+                <div class="social-icons">
+                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+
+            <!-- Coluna 2: Links Rápidos -->
+            <div class="footer-column">
+                <h4>Links Rápidos</h4>
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#sobre">Sobre Nós</a></li>
+                    <li><a href="#shop">Catálogo</a></li>
+                    <li><a href="{{ url_for('terms_page') }}">Termos de Serviço</a></li>
+                </ul>
+            </div>
+
+            <!-- Coluna 3: Atendimento -->
+            <div class="footer-column">
+                <h4>Atendimento</h4>
+                <ul>
+                    <li><a href="{{ url_for('faq_page') }}">FAQ</a></li>
+                    <li><a href="{{ url_for('terms_page') }}">Política de Privacidade</a></li>
+                    <li><a href="{{ url_for('faq_page') }}">Formas de Pagamento</a></li>
+                    <li><a href="{{ url_for('contato_page') }}">Contato</a></li>
+                </ul>
+            </div>
+
+            <!-- Coluna 4: Contato -->
+            <div class="footer-column">
+                <h4>Contato</h4>
+                <ul class="contact-info">
+                    <li><i class="fas fa-envelope"></i> contato@clicleitura.com</li>
+                    <li><i class="fas fa-phone"></i> (68) 99219-1861</li>
+                    <li><i class="fas fa-map-marker-alt"></i> <a href="{{ url_for('localizacao_page') }}" style="color: inherit; text-decoration: none;">Rio Branco, AC</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; 2025 Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+    <script>
+        let usuarioLogado = null;
+
+        // Verificar se usuário está logado
+        window.addEventListener('DOMContentLoaded', () => {
+            const usuario = JSON.parse(localStorage.getItem('usuario') || 'null');
+            usuarioLogado = usuario;
+            const loginLink = document.getElementById('loginLink');
+            const perfilLink = document.getElementById('perfilLink');
+            const userInfo = document.getElementById('userInfo');
+            const logoutBtn = document.getElementById('logoutBtn');
+            
+            if (usuario) {
+                // Usuário logado: mostrar perfil, nome e botão sair
+                loginLink.style.display = 'none';
+                perfilLink.style.display = 'inline';
+                userInfo.style.display = 'inline';
+                userInfo.textContent = `Olá, ${usuario.nome.split(' ')[0]}!`;
+                logoutBtn.style.display = 'inline-block';
+                
+                // Logout
+                logoutBtn.addEventListener('click', () => {
+                    if (confirm('Deseja sair?')) {
+                        localStorage.removeItem('usuario');
+                        location.reload();
+                    }
+                });
+
+                // Carregar carrinho
+                carregarCarrinho();
+            }
+
+            // Abrir carrinho ao clicar no ícone
+            document.getElementById('carrinhoIcon').addEventListener('click', abrirCarrinho);
+        });
+
+        async function adicionarAoCarrinho(livroId) {
+            if (!usuarioLogado) {
+                alert('Você precisa fazer login para adicionar itens ao carrinho!');
+                sessionStorage.setItem('redirectAfterLogin', window.location.href);
+                window.location.href = '/login';
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/carrinho/adicionar', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        usuario_id: usuarioLogado.id,
+                        livro_id: livroId
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    alert('✅ Livro adicionado ao carrinho!');
+                    carregarCarrinho();
+                } else {
+                    alert(data.error || 'Erro ao adicionar ao carrinho');
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                alert('Erro ao conectar com o servidor');
+            }
+        }
+
+        async function carregarCarrinho() {
+            if (!usuarioLogado) return;
+
+            try {
+                const response = await fetch(`/api/carrinho/${usuarioLogado.id}`);
+                const data = await response.json();
+
+                if (response.ok) {
+                    atualizarCarrinhoUI(data.itens, data.total);
+                }
+            } catch (error) {
+                console.error('Erro ao carregar carrinho:', error);
+            }
+        }
+
+        function atualizarCarrinhoUI(itens, total) {
+            const countBadge = document.getElementById('carrinhoCount');
+            const itensContainer = document.getElementById('carrinhoItens');
+            const totalElement = document.getElementById('carrinhoTotal');
+
+            // Atualizar badge de contagem
+            if (itens.length > 0) {
+                countBadge.style.display = 'flex';
+                countBadge.textContent = itens.length;
+            } else {
+                countBadge.style.display = 'none';
+            }
+
+            // Atualizar total
+            totalElement.textContent = `R$ ${total.toFixed(2)}`;
+
+            // Atualizar lista de itens
+            if (itens.length === 0) {
+                itensContainer.innerHTML = `
+                    <div class="carrinho-vazio">
+                        <i class="fas fa-shopping-cart"></i>
+                        <h3>Carrinho Vazio</h3>
+                        <p>Adicione livros ao seu carrinho para começar!</p>
+                    </div>
+                `;
+            } else {
+                itensContainer.innerHTML = itens.map(item => `
+                    <div class="carrinho-item">
+                        <img src="${item.imagem.startsWith('http') ? item.imagem : '/static/images/' + item.imagem}" 
+                             alt="${item.titulo}" 
+                             onerror="this.src='/static/images/default-book.jpg'">
+                        <div class="carrinho-item-info">
+                            <h4>${item.titulo.substring(0, 50)}${item.titulo.length > 50 ? '...' : ''}</h4>
+                            <p>${item.autor}</p>
+                            <p class="carrinho-item-preco">R$ ${item.preco.toFixed(2)}</p>
+                        </div>
+                        <button class="carrinho-item-remover" onclick="removerDoCarrinho(${item.id})" title="Remover">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                `).join('');
+            }
+        }
+
+        async function removerDoCarrinho(itemId) {
+            try {
+                const response = await fetch(`/api/carrinho/remover/${itemId}`, {
+                    method: 'DELETE'
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    carregarCarrinho();
+                } else {
+                    alert(data.error || 'Erro ao remover item');
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                alert('Erro ao conectar com o servidor');
+            }
+        }
+
+        function abrirCarrinho() {
+            if (!usuarioLogado) {
+                alert('Você precisa fazer login para ver o carrinho!');
+                window.location.href = '/login';
+                return;
+            }
+            document.getElementById('carrinhoModal').classList.add('show');
+        }
+
+        function fecharCarrinho() {
+            document.getElementById('carrinhoModal').classList.remove('show');
+        }
+
+        async function fecharPedidoEPagarComPix() {
+            if (!usuarioLogado) {
+                alert('Faça login para continuar!');
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/carrinho/${usuarioLogado.id}`);
+                const data = await response.json();
+
+                if (!response.ok || data.itens.length === 0) {
+                    alert('Seu carrinho está vazio!');
+                    return;
+                }
+
+                // Criar pedidos e gerar PIX
+                const responseFinalizacao = await fetch('/api/carrinho/finalizar-pix', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        usuario_id: usuarioLogado.id,
+                        email: usuarioLogado.email
+                    })
+                });
+
+                const resultado = await responseFinalizacao.json();
+
+                if (responseFinalizacao.ok) {
+                    // Exibir modal com QR Code PIX
+                    mostrarModalPix(resultado);
+                    fecharCarrinho();
+                    carregarCarrinho();
+                } else {
+                    alert(resultado.error || 'Erro ao gerar pagamento PIX');
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                alert('Erro ao conectar com o servidor');
+            }
+        }
+
+        function mostrarModalPix(dados) {
+            const pixInfo = document.getElementById('pixInfo');
+            
+            let html = `
+                <div style="margin-bottom: 2rem;">
+                    <h3 style="color: #702727; margin-bottom: 1rem;">Pedido #${dados.pedido_id} criado!</h3>
+                    <p style="font-size: 1.4rem; color: #555;">Total: <strong style="color: #702727;">R$ ${dados.total.toFixed(2)}</strong></p>
+                    <p style="font-size: 1.3rem; color: #777; margin-top: 0.5rem;">${dados.quantidade} livro(s)</p>
+                </div>
+
+                <div style="background: #f8f8f8; padding: 2rem; border-radius: 10px; margin-bottom: 2rem;">
+                    <img src="data:image/png;base64,${dados.qr_base64}" 
+                         alt="QR Code PIX" 
+                         style="max-width: 300px; width: 100%; margin: 0 auto; display: block;" />
+                </div>
+
+                <div style="background: #fff3cd; border: 2px solid #ffc107; border-radius: 8px; padding: 1.5rem; margin-bottom: 2rem;">
+                    <p style="font-size: 1.3rem; font-weight: bold; color: #856404; margin-bottom: 1rem;">
+                        <i class="fas fa-copy"></i> Código PIX Copia e Cola:
+                    </p>
+                    <div style="background: white; padding: 1rem; border-radius: 5px; font-family: monospace; font-size: 1.1rem; word-break: break-all; color: #333; margin-bottom: 1rem;">
+                        ${dados.pix_text}
+                    </div>
+                    <button onclick="copiarCodigoPix('${dados.pix_text}')" 
+                            style="background: #702727; color: white; border: none; padding: 1rem 2rem; border-radius: 5px; cursor: pointer; font-size: 1.4rem; width: 100%;">
+                        <i class="fas fa-copy"></i> Copiar Código PIX
+                    </button>
+                </div>
+
+                <div style="background: #d1ecf1; border-left: 4px solid #17a2b8; padding: 1.5rem; border-radius: 5px; margin-bottom: 2rem;">
+                    <p style="font-size: 1.3rem; color: #0c5460; margin: 0;">
+                        <i class="fas fa-info-circle"></i> <strong>Importante:</strong><br/>
+                        Após o pagamento, seu pedido será enviado para aprovação do administrador.
+                        Você receberá seu(s) e-book(s) por email após a aprovação.
+                    </p>
+                </div>
+
+                <button onclick="confirmarPagamentoPix(${dados.pedido_id})" 
+                        style="background: #28a745; color: white; border: none; padding: 1.2rem 2rem; border-radius: 5px; cursor: pointer; font-size: 1.5rem; width: 100%; margin-bottom: 1rem;">
+                    <i class="fas fa-check-circle"></i> Já Fiz o Pagamento
+                </button>
+
+                <button onclick="fecharPixModal()" 
+                        style="background: #6c757d; color: white; border: none; padding: 1rem 2rem; border-radius: 5px; cursor: pointer; font-size: 1.4rem; width: 100%;">
+                    Fechar
+                </button>
+            `;
+
+            pixInfo.innerHTML = html;
+            document.getElementById('pixModal').style.display = 'flex';
+        }
+
+        function copiarCodigoPix(codigo) {
+            navigator.clipboard.writeText(codigo).then(() => {
+                alert('✅ Código PIX copiado para a área de transferência!');
+            }).catch(() => {
+                alert('❌ Erro ao copiar código. Tente copiar manualmente.');
+            });
+        }
+
+        async function confirmarPagamentoPix(pedidoId) {
+            try {
+                const response = await fetch(`/api/pedido/${pedidoId}/confirmar-pix`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'}
+                });
+
+                const resultado = await response.json();
+
+                if (response.ok) {
+                    alert('✅ Pagamento confirmado! Seu pedido está aguardando aprovação do administrador.');
+                    fecharPixModal();
+                    window.location.href = '/perfil';
+                } else {
+                    alert(resultado.error || 'Erro ao confirmar pagamento');
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                alert('Erro ao conectar com o servidor');
+            }
+        }
+
+        function fecharPixModal() {
+            document.getElementById('pixModal').style.display = 'none';
+        }
+
+        // Fechar carrinho ao clicar fora
+        document.addEventListener('click', (e) => {
+            const modal = document.getElementById('carrinhoModal');
+            if (e.target === modal) {
+                fecharCarrinho();
+            }
+        });
+    </script>
+</body>
+
+</html>
