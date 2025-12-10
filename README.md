@@ -202,10 +202,10 @@ SQLite
 SQLite Viewer
 SQLite3 Editor
 
-Após instalar:
-Clique no arquivo loja.db no Explorer
-Ele abrirá automaticamente em uma visualização interativa
-Você verá todas as tabelas, poderá executar queries SQL, ver os dados, etc.
+  Após instalar:
+  Clique no arquivo loja.db no Explorer
+  Ele abrirá automaticamente em uma visualização interativa
+  Você verá todas as tabelas, poderá executar queries SQL, ver os dados, etc.
 
 2. Via Terminal (Rápido) 💻
 python -c "import sqlite3; import pandas as pd; con = sqlite3.connect('loja.db'); print('\n=== TABELA: LIVROS ===\n'); print(pd.read_sql_query('SELECT id, titulo, autor, preco FROM livros LIMIT 5', con)); print('\n=== TABELA: USUARIOS ===\n'); print(pd.read_sql_query('SELECT id, nome, email, criado_em FROM usuarios', con)); print('\n=== TABELA: PEDIDOS (últimos 5) ===\n'); print(pd.read_sql_query('SELECT id, email, status, criado_em FROM pedidos ORDER BY id DESC LIMIT 5', con)); con.close()"
