@@ -1,5 +1,3 @@
-/* RESET assume que reset.css já foi carregado primeiro */
-
 /* COR DE FUNDO GERAL */
 :root {
     --vinho: #702727;
@@ -72,9 +70,15 @@ section {
 
 }
 
+.icons {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
 .icons img {
-    margin: 1rem;
-    cursor:pointer;
+    cursor: pointer;
+    transition: all 0.3s ease;
 }
 
 .icons img:hover {
@@ -82,11 +86,26 @@ section {
     height: 40px;
 }
 
+#userInfo {
+    font-size: 1.6rem;
+    white-space: nowrap;
+}
+
+#logoutBtn {
+    font-size: 1.4rem;
+    transition: all 0.3s ease;
+}
+
+#logoutBtn:hover {
+    background: var(--vinho-escuro);
+    transform: scale(1.05);
+}
+
 .home-container {
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 100vh;
+    height: 90vh;
     color: #fff;
     gap: 3rem;
     padding: 0 5%;
@@ -98,15 +117,16 @@ section {
 .home-container section{
     display: flex;
     align-items: center;
-    margin-top: -5%;
+    margin-top: -2%;
 
 }
 
 .img-principal img { 
     width: 49vw;
-    max-width: 490px;
-    margin-top: 30%;
+    max-width: 690px;
+    margin-top: 1%;
 }
+
 
 .btn {
     background: var(--main-color);

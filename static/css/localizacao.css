@@ -1,5 +1,16 @@
 /* ESTILOS DA PÁGINA DE LOCALIZAÇÃO */
-
+/* Reset já feito em reset.css, não duplicar */
+* {
+    margin: 0;
+    padding: 0;
+    outline: none;
+    border: none;
+    text-transform: capitalize;
+    transition: 0.2s linear;
+    font-family: "Roboto", sans-serif;
+    text-decoration: none;
+    box-sizing: border-box;
+}
 /* Reset já feito em reset.css, não duplicar */
 
 body {
