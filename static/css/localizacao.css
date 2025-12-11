@@ -51,6 +51,13 @@ body {
     gap: 2rem;
 }
 
+.navbar a.active {
+    color: rgb(85, 7, 7);
+    border-bottom: 3px solid var(--vinho);
+    background: rgba(255, 255, 255, 0.774);
+
+}
+
 .navbar a {
     color: white;
     text-decoration: none;
@@ -62,9 +69,11 @@ body {
 }
 
 .navbar a:hover {
-    background: rgba(255,255,255,0.1);
+    color: #ffffff;
+    background: rgba(80, 5, 5, 0.692); /* vinho escuro */
     transform: translateY(-2px);
 }
+
 
 .icons {
     display: flex;

@@ -18,14 +18,15 @@
 }
 
 body {
-    background-color: #b6b2b28f;
+    background-color: #f5f5f5;
     font-family: "Roboto", sans-serif;
 }
 
-section {
-    padding: 3rem 2rem;
-    margin: 0 auto;
-    max-width: 1600px;
+.navbar a.active {
+    color: rgb(85, 7, 7);
+    border-bottom: 3px solid var(--vinho);
+    background: rgba(255, 255, 255, 0.774);
+
 }
 
 a {
@@ -40,71 +41,65 @@ a:hover {
 }
 
 /* HEADER */
+/* === HEADER UNIFICADO (igual ao da página de localização) === */
 .header {
-    position: relative;
+    background: linear-gradient(135deg, #702727 0%, #4d1b1b 100%);
+    padding: 1.5rem 5%;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    position: sticky;
     top: 0;
-    left: 0;
-    right: 0;
-    z-index: 99;
-    border-bottom: var(--black);
-    background-color: #f5f4f4;
+    z-index: 1000;
 }
 
 .header section {
     display: flex;
-    align-items: center;
     justify-content: space-between;
-    padding-top: 1.5rem;
-    padding-bottom: 0.2px;
-}
-
-.header .logo {
-    display: flex;
     align-items: center;
-    z-index: 100;
+    max-width: 1400px;
+    margin: 0 auto;
 }
 
-.header .logo img {
+.logo img {
     height: 60px;
-    width: auto;
-    object-fit: contain;
-    display: block;
-}
-
-.header .navbar {
-    display: flex;
-    gap: 0;
-    align-items: center;
-}
-
-.header .navbar a {
-    margin: 0 1rem;
-    font-size: 1.3rem;
-    color: #450210;
-    transition: 0.3s;
-    position: relative;
-    padding-bottom: 0.3rem; /* aqui! */
-}
-
-.header .navbar a:hover {
-    color: rgba(126, 35, 53, 0.5);
-    transform: scale(1.08);
-}
-
-
-
-.header .icons {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-.header .icons img {
-    cursor: pointer;
     transition: transform 0.3s;
 }
 
-.header .icons img:hover {
+.logo:hover img {
+    transform: scale(1.05);
+}
+
+.navbar {
+    display: flex;
+    gap: 2rem;
+}
+
+.navbar a {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 1.1rem;
+    transition: all 0.3s;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+}
+
+.navbar a:hover {
+    color: #ffffff;
+    background: rgba(80, 5, 5, 0.692); /* vinho escuro */
+    transform: translateY(-2px);
+}
+
+.icons {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+}
+
+.icons a, .icons img {
+    transition: transform 0.3s;
+}
+
+.icons a:hover, .icons img:hover {
     transform: scale(1.1);
 }
 

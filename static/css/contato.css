@@ -60,7 +60,8 @@ body {
 }
 
 .navbar a:hover {
-    background: rgba(255,255,255,0.1);
+    color: #ffffff;
+    background: rgba(80, 5, 5, 0.692); /* vinho escuro */
     transform: translateY(-2px);
 }
 
