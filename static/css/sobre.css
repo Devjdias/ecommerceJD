@@ -1,30 +1,48 @@
-/* ===== PÁGINA SOBRE - CLICLEITURA ===== */
+/* ESTILOS DA PÁGINA DE CONTATO */
 
-/* VARIÁVEIS */
-:root {
-    --vinho: #702727;
-    --vinho-escuro: #4d1b1b;
-    --vinho-claro: #8B3A3A;
-    --cinza-texto: #555;
-    --cinza-claro: #f8f9fa;
+/* Reset já feito em reset.css, não duplicar */
+* {
+    margin: 0;
+    padding: 0;
+    outline: none;
+    border: none;
+    text-transform: capitalize;
+    transition: 0.2s linear;
+    font-family: "Roboto", sans-serif;
+    text-decoration: none;
+    box-sizing: border-box;
+}
+/* Reset já feito em reset.css, não duplicar */
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f5f5f5;
+    color: #333;
 }
 
-/* CABEÇALHO */
+/* HEADER */
 .header {
-    background-color: #DAD9D9;
+    background: linear-gradient(135deg, #702727 0%, #4d1b1b 100%);
+    padding: 1.5rem 5%;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     position: sticky;
     top: 0;
     z-index: 1000;
 }
 
 .header section {
-    max-width: 1600px;
-    margin: 0 auto;
-    padding: 1.5rem 3rem;
     display: flex;
-    align-items: center;
     justify-content: space-between;
+    align-items: center;
+    max-width: 1400px;
+    margin: 0 auto;
 }
+
+.logo img {
+    height: 60px;
+    transition: transform 0.3s;
+}
+
 
 .navbar {
     display: flex;
@@ -32,14 +50,39 @@
 }
 
 .navbar a {
-    font-size: 1.6rem;
-    color: var(--vinho);
+    color: white;
     text-decoration: none;
-    transition: color 0.3s;
+    font-weight: 500;
+    font-size: 1.1rem;
+    transition: all 0.3s;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
 }
 
 .navbar a:hover {
-    color: var(--vinho-escuro);
+    color: #ffffff;
+    background: rgba(80, 5, 5, 0.692); /* vinho escuro */
+    transform: translateY(-2px);
+}
+
+.icons {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+}
+
+.icons a, .icons img {
+    transition: transform 0.3s;
+}
+
+.icons a:hover, .icons img:hover {
+    transform: scale(1.1);
+}
+.navbar a.active {
+    color: rgb(85, 7, 7);
+    border-bottom: 3px solid var(--vinho);
+    background: rgba(255, 255, 255, 0.774);
+
 }
 
 .icons img {
@@ -50,7 +93,7 @@
 /* HERO */
 .hero-sobre {
     background: linear-gradient(135deg, var(--vinho) 0%, var(--vinho-escuro) 100%);
-    color: white;
+    color: rgb(0, 0, 0);
     text-align: center;
     padding: 6rem 2rem;
 }

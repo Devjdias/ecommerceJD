@@ -11,51 +11,51 @@
 </head>
 <body>
     <!-- HEADER -->
-<header class="header">
-    <section>
-        <a href="{{ url_for('index') }}" class="logo" aria-label="ClicLeitura - início">
-            <img src="{{ url_for('static', filename='images/logo2.png') }}" alt="Logo ClicLeitura">
-        </a>
+    <header class="header">
+        <section>
+            <a href="{{ url_for('index') }}" class="logo" aria-label="ClicLeitura - início">
+                <img src="{{ url_for('static', filename='images/logo2.png') }}" alt="Logo ClicLeitura">
+            </a>
 
-        <nav class="navbar" aria-label="Navegação principal">
-            <a href="{{ url_for('index') }}">Home</a>
-            <a href="{{ url_for('sobre_page') }}">Sobre</a>
-            <a href="{{ url_for('index') }}#shop">E-books</a>
-            <a href="{{ url_for('contato_page') }}" class="active">Contato</a>
-            <a href="{{ url_for('localizacao_page') }}">Localização</a>
-            <a href="{{ url_for('faq_page') }}">FAQ</a>
-        </nav>
+            <nav class="navbar" aria-label="Navegação principal">
+                <a href="{{ url_for('index') }}">Home</a>
+                <a href="{{ url_for('sobre_page') }}">Sobre</a>
+                <a href="{{ url_for('index') }}#shop">E-books</a>
+                <a href="{{ url_for('contato_page') }}" class="active">Contato</a>
+                <a href="{{ url_for('localizacao_page') }}">Localização</a>
+                <a href="{{ url_for('faq_page') }}">FAQ</a>
+            </nav>
 
-        <div class="icons" aria-hidden="false">
-            <div id="carrinhoIcon" style="position: relative; display: inline-block; cursor: pointer;">
-                <img id="carrinhoImg" width="30" height="30"
-                    src="https://img.icons8.com/?size=100&id=9671&format=png&color=FFFFFF"
-                    alt="Carrinho de Compra" >
-                <span id="carrinhoCount"
-                    style="display: none; position: absolute; top: -8px; right: -8px; background: #e74c3c; color: white; border-radius: 50%; width: 20px; height: 20px; font-size: 12px; font-weight: bold; display:flex; align-items: center; justify-content: center; pointer-events: none;">
-                    0
-                </span>
+            <div class="icons" aria-hidden="false">
+                <div id="carrinhoIcon" style="position: relative; display: inline-block; cursor: pointer;">
+                    <img id="carrinhoImg" width="30" height="30"
+                        src="https://img.icons8.com/?size=100&id=9671&format=png&color=FFFFFF"
+                        alt="Carrinho de Compra" >
+                    <span id="carrinhoCount"
+                        style="display: none; position: absolute; top: -8px; right: -8px; background: #e74c3c; color: white; border-radius: 50%; width: 20px; height: 20px; font-size: 12px; font-weight: bold; display:flex; align-items: center; justify-content: center; pointer-events: none;">
+                        0
+                    </span>
+                </div>
+
+                <a href="{{ url_for('login_page') }}" id="loginLink" title="Entrar">
+                    <img width="30" height="30"
+                        src="https://img.icons8.com/?size=100&id=24220&format=png&color=FFFFFF"
+                        alt="Entrar na conta" />
+                </a>
+
+                <a href="{{ url_for('perfil_page') }}" id="perfilLink" title="Meu perfil" style="display: none;">
+                    <img width="30" height="30"
+                        src="https://img.icons8.com/?size=100&id=7820&format=png&color=FFFFFF"
+                        alt="Meu Perfil" />
+                </a>
+
+                
+                <span id="userInfo" style="display: none; color: #ffffff; font-weight: bold; margin-left: 10px;"></span>
+                <button id="logoutBtn" style="display: none; margin-left: 10px; padding: 5px 15px; background: #f1f1f1; color: rgb(77, 6, 6); border: none; border-radius: 4px; cursor: pointer;">Sair</button>
+                
             </div>
-
-            <a href="{{ url_for('login_page') }}" id="loginLink" title="Entrar">
-                <img width="30" height="30"
-                    src="https://img.icons8.com/?size=100&id=24220&format=png&color=FFFFFF"
-                    alt="Entrar na conta" />
-            </a>
-
-            <a href="{{ url_for('perfil_page') }}" id="perfilLink" title="Meu perfil" style="display: none;">
-                <img width="30" height="30"
-                    src="https://img.icons8.com/?size=100&id=7820&format=png&color=FFFFFF"
-                    alt="Meu Perfil" />
-            </a>
-
-            
-            <span id="userInfo" style="display: none; color: #ffffff; font-weight: bold; margin-left: 10px;"></span>
-            <button id="logoutBtn" style="display: none; margin-left: 10px; padding: 5px 15px; background: #f1f1f1; color: rgb(77, 6, 6); border: none; border-radius: 4px; cursor: pointer;">Sair</button>
-            
-        </div>
-    </section>
-</header>
+        </section>
+    </header>
 
 
 
