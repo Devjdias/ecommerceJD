@@ -7,7 +7,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}" />
     <link rel="stylesheet" href="{{ url_for('static', filename='css/carrinho.css') }}" />
+    <script src="{{ url_for('static', filename='js/auth.js') }}"></script>
     <link rel="shortcut icon" href="{{ url_for('static', filename='images/iconLivro.png') }}">
+    
     <title>ClicLeitura - E-books</title>
 </head>
 
@@ -20,7 +22,7 @@
             </a>
 
             <nav class="navbar">
-                <a href="#home">Home</a>
+                <a href="{{ url_for('index') }}" class="active">Home</a>
                 <a href="{{ url_for('sobre_page') }}">Sobre</a>
                 <a href="#shop">E-books</a>
                 <a href="{{ url_for('contato_page') }}">Contato</a>
@@ -43,9 +45,9 @@
                     <img width="30" height="30" src="https://img.icons8.com/?size=100&id=7820&format=png&color=702727"
                         alt="Meu Perfil" style="cursor: pointer;" title="Meu Perfil" />
                 </a>
-                <span id="userInfo" style="display: none; color: #702727; font-weight: bold; margin-left: 10px;"></span>
-                <button id="logoutBtn" style="display: none; margin-left: 10px; padding: 5px 15px; background: #702727; color: white; border: none; border-radius: 4px; cursor: pointer;">Sair</button>
-            </div>
+                 <span id="userInfo" style="display: none; color: #ffffff; font-weight: bold; margin-left: 10px;"></span>
+                <button id="logoutBtn" style="display: none; margin-left: 10px; padding: 5px 15px; background: #f1f1f1; color: rgb(77, 6, 6); border: none; border-radius: 4px; cursor: pointer;">Sair</button>
+                
         </section>
     </header>
 

@@ -103,6 +103,13 @@ a:hover {
     transform: scale(1.1);
 }
 
+/* Evitar hover no link ativo */
+.navbar a.active:hover {
+    color: rgb(85, 7, 7) !important;
+    background: rgba(255, 255, 255, 0.774) !important;
+}
+
+
 #carrinhoCount {
     position: absolute;
     top: -5px;
@@ -696,4 +703,10 @@ a:hover {
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
     }
+}
+
+/* Evitar hover no link ativo */
+.navbar a.active:hover {
+    color: rgb(85, 7, 7) !important;
+    background: rgba(255, 255, 255, 0.774) !important;
 }
