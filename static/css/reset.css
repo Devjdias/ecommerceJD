@@ -1,12 +1,29 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+/* IMPORTS */
+@import url('https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700');
+@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500,700');
+
+/* VARIÁVEIS CSS */
+:root {
+    --vinho: #702727;
+    --vinho-escuro: #4d1b1b;
+    --fundo-claro: #f8f6f2;
+    --secao-clara: #fff9f7;
+    --amarelo-estrela: #ff9f00;
+    --main-color: #702727;
+    --black: #13131a;
+    --bg: #010103;
 }
 
-html, body {
-  height: 100%;
-  font-size: 100%;
-  font-family: sans-serif;
-  line-height: 1.5;
+
+/* RESET GLOBAL */
+* {
+    margin: 0;
+    padding: 0;
+    outline: none;
+    border: none;
+    text-transform: capitalize;
+    transition: 0.2s linear;
+    font-family: "Roboto", sans-serif;
+    text-decoration: none;
+    box-sizing: border-box;
 }

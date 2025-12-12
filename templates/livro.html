@@ -12,65 +12,6 @@
 
 <body>
     <div class="livro-detalhes">
-            max-width: 800px;
-            margin: 50px auto;
-            padding: 20px;
-            background: #fff;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        .livro-detalhes img {
-            max-width: 300px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-        .checkout-form {
-            margin-top: 30px;
-            padding: 20px;
-            background: #f9f9f9;
-            border-radius: 8px;
-        }
-        .checkout-form input {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        .checkout-form button {
-            padding: 12px 30px;
-            background: #702727;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        .checkout-form button:hover {
-            background: #501919;
-        }
-        .qr-container {
-            display: none;
-            text-align: center;
-            margin-top: 20px;
-        }
-        .qr-container img {
-            max-width: 300px;
-        }
-        .btn-voltar {
-            display: inline-block;
-            margin-top: 20px;
-            padding: 10px 20px;
-            background: #ddd;
-            color: #333;
-            text-decoration: none;
-            border-radius: 4px;
-        }
-    </style>
-</head>
-
-<body>
-    <div class="livro-detalhes">
         <a href="{{ url_for('index') }}" class="btn-voltar">← Voltar para a loja</a>
         
         {% if livro['imagem'].startswith('http') %}
