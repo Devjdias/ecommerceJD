@@ -14,43 +14,74 @@
     <div class="livro-detalhes">
         <a href="{{ url_for('index') }}" class="btn-voltar">← Voltar para a loja</a>
         
-        {% if livro['imagem'].startswith('http') %}
-            <img src="{{ livro['imagem'] }}" alt="{{ livro['titulo'] }}" style="max-width: 300px;" />
-        {% else %}
-            <img src="{{ url_for('static', filename='images/' + livro['imagem']) }}" alt="{{ livro['titulo'] }}" />
-        {% endif %}
-        
-        <h1>{{ livro['titulo'] }}</h1>
-        <p><strong>Autor:</strong> {{ livro['autor'] }}</p>
-        <p><strong>Fonte:</strong> {{ livro['origem'] }}</p>
-        
-        {% if livro['descricao'] %}
-        <div style="margin: 20px 0; padding: 20px; background: #f8f9fa; border-left: 4px solid #702727; border-radius: 4px;">
-            <h3 style="margin-top: 0; color: #702727;">📖 Sobre este E-book</h3>
-            <p style="line-height: 1.6; text-align: justify; color: #333;">{{ livro['descricao'] }}</p>
+        <div class="livro-content">
+            <div class="livro-imagem">
+                {% if livro['imagem'].startswith('http') %}
+                    <img src="{{ livro['imagem'] }}" alt="{{ livro['titulo'] }}" />
+                {% else %}
+                    <img src="{{ url_for('static', filename='images/' + livro['imagem']) }}" alt="{{ livro['titulo'] }}" />
+                {% endif %}
+            </div>
+            
+            <div class="livro-info">
+                <h1>{{ livro['titulo'] }}</h1>
+                <p><strong>Autor:</strong> {{ livro['autor'] }}</p>
+                <p><strong>Fonte:</strong> {{ livro['origem'] }}</p>
+                
+                {% if livro['descricao'] %}
+                <div class="descricao-box">
+                    <h3>📖 Sobre este E-book</h3>
+                    <p>{{ livro['descricao'] }}</p>
+                </div>
+                {% endif %}
+                
+                <div class="preco-box">
+                    <h2>R$ {{ "%.2f"|format(livro['preco']) }}</h2>
+                </div>
+                
+                <div class="acoes-livro">
+                    <button class="btn-secundario" onclick="adicionarAoCarrinho()">
+                        🛒 Adicionar ao Carrinho
+                    </button>
+                    <button class="btn-primario" onclick="abrirModalCheckout()">
+                        💳 Comprar Agora
+                    </button>
+                </div>
+            </div>
         </div>
-        {% endif %}
-        
-        <h2 style="color: #702727;">R$ {{ "%.2f"|format(livro['preco']) }}</h2>
-        
-        <button onclick="adicionarAoCarrinho()" style="padding: 12px 30px; background: #27ae60; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; margin-bottom: 20px;">
-            🛒 Adicionar ao Carrinho
-        </button>
-        
-        <div class="checkout-form">
-            <h3>Comprar E-book</h3>
-            <p>Após o pagamento, o e-book será enviado automaticamente para seu e-mail!</p>
+    </div>
+
+    <!-- MODAL DE CHECKOUT -->
+    <div class="modal-overlay" id="modalCheckout" onclick="fecharModalSeForaConteudo(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <h3>💳 Finalizar Compra</h3>
+                <button class="btn-fechar" onclick="fecharModal()">×</button>
+            </div>
             
-            <form id="checkoutForm">
-                <input type="email" id="emailInput" placeholder="Seu e-mail" required />
-                <button type="submit">Gerar PIX e Comprar</button>
-            </form>
-            
-            <div class="qr-container" id="qrContainer">
-                <h3>Escaneie o QR Code PIX</h3>
-                <img id="qrImage" src="" alt="QR Code PIX" />
-                <p id="pixText"></p>
-                <button onclick="simularPagamento()">Simular Pagamento Realizado</button>
+            <div class="modal-body">
+                <div class="info-compra">
+                    <p><strong>📚 E-book:</strong> {{ livro['titulo'] }}</p>
+                    <p><strong>💰 Valor:</strong> R$ {{ "%.2f"|format(livro['preco']) }}</p>
+                    <p style="margin-top: 15px; font-size: 0.9rem;">
+                        ✉️ Após o pagamento, o e-book será enviado automaticamente para seu e-mail!
+                    </p>
+                </div>
+                
+                <form id="checkoutForm" class="checkout-form">
+                    <input type="email" id="emailInput" placeholder="Seu melhor e-mail" required />
+                    <button type="submit">🔒 Gerar PIX e Comprar</button>
+                </form>
+                
+                <div class="qr-container" id="qrContainer">
+                    <h3>📱 Escaneie o QR Code PIX</h3>
+                    <img id="qrImage" src="" alt="QR Code PIX" />
+                    <p id="pixText"></p>
+                    <button class="btn-simular" onclick="simularPagamento()">
+                        ✅ Simular Pagamento Realizado
+                    </button>
+                    <div id="mensagemStatus"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -66,10 +97,44 @@
             const emailInput = document.getElementById('emailInput');
             
             if (usuario) {
-                // Se logado, preencher email automaticamente e desabilitar campo
                 emailInput.value = usuario.email;
                 emailInput.readOnly = true;
-                emailInput.style.background = '#f0f0f0';
+            }
+        });
+
+        function abrirModalCheckout() {
+            const usuario = JSON.parse(localStorage.getItem('usuario') || 'null');
+            
+            if (!usuario) {
+                alert('⚠️ Você precisa fazer login antes de comprar!');
+                sessionStorage.setItem('redirectAfterLogin', window.location.pathname);
+                window.location.href = '/login';
+                return;
+            }
+            
+            document.getElementById('modalCheckout').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function fecharModal() {
+            document.getElementById('modalCheckout').classList.remove('active');
+            document.body.style.overflow = 'auto';
+            
+            // Resetar formulário
+            document.getElementById('qrContainer').classList.remove('active');
+            document.getElementById('mensagemStatus').innerHTML = '';
+        }
+
+        function fecharModalSeForaConteudo(event) {
+            if (event.target === event.currentTarget) {
+                fecharModal();
+            }
+        }
+
+        // Fechar modal com ESC
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                fecharModal();
             }
         });
 
@@ -111,12 +176,10 @@
         document.getElementById('checkoutForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             
-            // Verificar se usuário está logado
             const usuario = JSON.parse(localStorage.getItem('usuario') || 'null');
             
             if (!usuario) {
                 alert('⚠️ Você precisa fazer login antes de comprar!');
-                // Salvar livro atual para redirecionar depois do login
                 sessionStorage.setItem('redirectAfterLogin', window.location.pathname);
                 window.location.href = '/login';
                 return;
@@ -138,7 +201,7 @@
                     pedidoAtual = data.pedido_id;
                     document.getElementById('qrImage').src = 'data:image/png;base64,' + data.qr_base64;
                     document.getElementById('pixText').textContent = data.pix_text;
-                    document.getElementById('qrContainer').style.display = 'block';
+                    document.getElementById('qrContainer').classList.add('active');
                 } else {
                     alert('Erro: ' + data.error);
                 }
@@ -153,15 +216,9 @@
                 return;
             }
             
-            // Mostrar alert de sucesso do pagamento
-            alert('✅ Pagamento realizado com sucesso!');
-            
-            // Mostrar mensagem de validação na tela
-            const qrContainer = document.getElementById('qrContainer');
-            const mensagemValidacao = document.createElement('div');
-            mensagemValidacao.style.cssText = 'margin-top: 20px; padding: 15px; background: #4CAF50; color: white; border-radius: 8px; font-weight: bold;';
-            mensagemValidacao.innerHTML = '🔄 Validando pagamento e enviando e-book...';
-            qrContainer.appendChild(mensagemValidacao);
+            const statusDiv = document.getElementById('mensagemStatus');
+            statusDiv.className = 'mensagem-sucesso';
+            statusDiv.innerHTML = '🔄 Validando pagamento e enviando e-book...';
             
             try {
                 const response = await fetch('/api/confirmar_pagamento', {
@@ -173,23 +230,21 @@
                 const data = await response.json();
                 
                 if (response.ok) {
-                    // Atualizar mensagem de sucesso
-                    mensagemValidacao.innerHTML = '✅ Pagamento validado! E-book enviado para seu e-mail com sucesso!';
+                    statusDiv.innerHTML = '✅ Pagamento confirmado! E-book enviado para seu e-mail!';
                     
-                    // Redirecionar após 3 segundos
                     setTimeout(() => {
+                        fecharModal();
                         window.location.href = '{{ url_for("index") }}';
                     }, 3000);
                 } else {
-                    mensagemValidacao.style.background = '#f44336';
-                    mensagemValidacao.innerHTML = '❌ Erro: ' + data.error;
+                    statusDiv.className = 'mensagem-erro';
+                    statusDiv.innerHTML = '❌ Erro: ' + data.error;
                 }
             } catch (error) {
-                mensagemValidacao.style.background = '#f44336';
-                mensagemValidacao.innerHTML = '❌ Erro ao confirmar pagamento: ' + error.message;
+                statusDiv.className = 'mensagem-erro';
+                statusDiv.innerHTML = '❌ Erro ao confirmar pagamento: ' + error.message;
             }
         }
     </script>
 </body>
-
 </html>
