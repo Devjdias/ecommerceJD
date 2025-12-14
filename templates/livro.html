@@ -4,48 +4,98 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}" />
     <link rel="stylesheet" href="{{ url_for('static', filename='css/livro.css') }}" />
+        <script src="{{ url_for('static', filename='js/livro.js') }}"></script>
     <link rel="shortcut icon" href="{{ url_for('static', filename='images/iconLivro.png') }}" />
     <title>{{ livro['titulo'] }} - ClicLeitura</title>
 </head>
 
+<!-- DATA-ATTRIBUTE PARA PASSAR O ID DO LIVRO AO JS -->
+<div data-livro-id="{{ livro['id'] }}" style="display: none;"></div>
+
 <body>
-    <div class="livro-detalhes">
-        <a href="{{ url_for('index') }}" class="btn-voltar">← Voltar para a loja</a>
-        
-        <div class="livro-content">
-            <div class="livro-imagem">
-                {% if livro['imagem'].startswith('http') %}
-                    <img src="{{ livro['imagem'] }}" alt="{{ livro['titulo'] }}" />
-                {% else %}
-                    <img src="{{ url_for('static', filename='images/' + livro['imagem']) }}" alt="{{ livro['titulo'] }}" />
-                {% endif %}
+    <!-- HEADER -->
+    <header class="header">
+        <section>
+            <a href="{{ url_for('index') }}" class="logo" aria-label="ClicLeitura - início">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo">
+            </a>
+
+            <nav class="navbar">
+                <a href="{{ url_for('index') }}" class="active">Home</a>
+                <a href="{{ url_for('sobre_page') }}">Sobre</a>
+                <a href="#shop">E-books</a>
+                <a href="{{ url_for('contato_page') }}">Contato</a>
+                <a href="{{ url_for('localizacao_page') }}">Localização</a>
+                <a href="{{ url_for('faq_page') }}">FAQ</a>
+            </nav>
+
+            <div class="icons">
+                <div id="carrinhoIcon" style="position: relative; display: inline-block; cursor: pointer;">
+                    <img id="carrinhoImg" width="30" height="30"
+                        src="https://img.icons8.com/?size=100&id=9671&format=png&color=4d0606" alt="Carrinho">
+                    <span id="carrinhoCount" style="position: absolute; top: -8px; right: -8px; background: #e74c3c; color: rgb(255, 0, 0); border-radius: 50%; width: 20px; height: 20px; font-size: 12px; font-weight: bold; align-items: center; justify-content: center;">0</span>
+                </div>
+
+                <a href="{{ url_for('login_page') }}" id="loginLink">
+                    <img width="30" height="30" src="https://img.icons8.com/?size=100&id=24220&format=png&color=702727" alt="Entrar">
+                </a>
+                <a href="{{ url_for('perfil_page') }}" id="perfilLink" style="display: none;">
+                    <img width="30" height="30" src="https://img.icons8.com/?size=100&id=7820&format=png&color=702727" alt="Perfil">
+                </a>
+                <span id="userInfo" style="display: none; color: #4d0606; font-weight: bold;"></span>
+                <button id="logoutBtn" style="display: none; padding: 5px 15px; background: #f1f1f1; color: #4d0606; border: none; border-radius: 4px; cursor: pointer;">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i> Sair
+                </button>
+            </div>
+        </section>
+    </header>
+
+    <!-- MODAL DO LIVRO -->
+    <div class="modal-livro-overlay active" id="modalLivro">
+        <div class="modal-livro-content">
+            <div class="modal-livro-header">
+                <h2>{{ livro['titulo'] }}</h2>
+                <button class="modal-livro-close" onclick="fecharModal()">&times;</button>
             </div>
             
-            <div class="livro-info">
-                <h1>{{ livro['titulo'] }}</h1>
-                <p><strong>Autor:</strong> {{ livro['autor'] }}</p>
-                <p><strong>Fonte:</strong> {{ livro['origem'] }}</p>
-                
-                {% if livro['descricao'] %}
-                <div class="descricao-box">
-                    <h3>📖 Sobre este E-book</h3>
-                    <p>{{ livro['descricao'] }}</p>
-                </div>
-                {% endif %}
-                
-                <div class="preco-box">
-                    <h2>R$ {{ "%.2f"|format(livro['preco']) }}</h2>
-                </div>
-                
-                <div class="acoes-livro">
-                    <button class="btn-secundario" onclick="adicionarAoCarrinho()">
-                        🛒 Adicionar ao Carrinho
-                    </button>
-                    <button class="btn-primario" onclick="abrirModalCheckout()">
-                        💳 Comprar Agora
-                    </button>
+            <div class="modal-livro-body">
+                <div class="livro-detalhes-content">
+                    <div class="livro-detalhes-imagem">
+                        {% if livro['imagem'].startswith('http') %}
+                            <img src="{{ livro['imagem'] }}" alt="{{ livro['titulo'] }}" />
+                        {% else %}
+                            <img src="{{ url_for('static', filename='images/' + livro['imagem']) }}" alt="{{ livro['titulo'] }}" />
+                        {% endif %}
+                    </div>
+                    
+                    <div class="livro-detalhes-info">
+                        <h1>{{ livro['titulo'] }}</h1>
+                        <p><strong>Autor:</strong> {{ livro['autor'] }}</p>
+                        <p><strong>Fonte:</strong> {{ livro['origem'] }}</p>
+                        
+                        {% if livro['descricao'] %}
+                        <div class="descricao-box">
+                            <h3>📖 Sobre este E-book</h3>
+                            <p>{{ livro['descricao'] }}</p>
+                        </div>
+                        {% endif %}
+                        
+                        <div class="preco-box">
+                            <h2>R$ {{ "%.2f"|format(livro['preco']) }}</h2>
+                        </div>
+                        
+                        <div class="acoes-livro">
+                            <button class="btn-secundario" onclick="adicionarAoCarrinho()">
+                                🛒 Adicionar ao Carrinho
+                            </button>
+                            <button class="btn-primario" onclick="abrirModalCheckout()">
+                                💳 Comprar Agora
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -56,7 +106,7 @@
         <div class="modal-content" onclick="event.stopPropagation()">
             <div class="modal-header">
                 <h3>💳 Finalizar Compra</h3>
-                <button class="btn-fechar" onclick="fecharModal()">×</button>
+                <button class="btn-fechar" onclick="fecharCheckoutModal()">×</button>
             </div>
             
             <div class="modal-body">
@@ -86,165 +136,55 @@
         </div>
     </div>
 
-    <script>
-        let pedidoAtual = null;
-        let usuarioLogado = null;
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-column">
+                <h3>ClicLeitura</h3>
+                <p>Sua livraria digital com os melhores e-books. Leitura de qualidade ao alcance de um clique.</p>
+                <div class="social-icons">
+                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
 
-        // Verificar se usuário está logado ao carregar página
-        window.addEventListener('DOMContentLoaded', () => {
-            const usuario = JSON.parse(localStorage.getItem('usuario') || 'null');
-            usuarioLogado = usuario;
-            const emailInput = document.getElementById('emailInput');
-            
-            if (usuario) {
-                emailInput.value = usuario.email;
-                emailInput.readOnly = true;
-            }
-        });
+            <div class="footer-column">
+                <h4>Links Rápidos</h4>
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#sobre">Sobre Nós</a></li>
+                    <li><a href="#shop">Catálogo</a></li>
+                    <li><a href="{{ url_for('terms_page') }}">Termos de Serviço</a></li>
+                </ul>
+            </div>
 
-        function abrirModalCheckout() {
-            const usuario = JSON.parse(localStorage.getItem('usuario') || 'null');
-            
-            if (!usuario) {
-                alert('⚠️ Você precisa fazer login antes de comprar!');
-                sessionStorage.setItem('redirectAfterLogin', window.location.pathname);
-                window.location.href = '/login';
-                return;
-            }
-            
-            document.getElementById('modalCheckout').classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
+            <div class="footer-column">
+                <h4>Atendimento</h4>
+                <ul>
+                    <li><a href="{{ url_for('faq_page') }}">FAQ</a></li>
+                    <li><a href="{{ url_for('terms_page') }}">Política de Privacidade</a></li>
+                    <li><a href="{{ url_for('faq_page') }}">Formas de Pagamento</a></li>
+                    <li><a href="{{ url_for('contato_page') }}">Contato</a></li>
+                </ul>
+            </div>
 
-        function fecharModal() {
-            document.getElementById('modalCheckout').classList.remove('active');
-            document.body.style.overflow = 'auto';
-            
-            // Resetar formulário
-            document.getElementById('qrContainer').classList.remove('active');
-            document.getElementById('mensagemStatus').innerHTML = '';
-        }
+            <div class="footer-column">
+                <h4>Contato</h4>
+                <ul class="contact-info">
+                    <li><i class="fas fa-envelope"></i> contato@clicleitura.com</li>
+                    <li><i class="fas fa-phone"></i> (68) 99219-1861</li>
+                    <li><i class="fas fa-map-marker-alt"></i> <a href="{{ url_for('localizacao_page') }}" style="color: inherit;">Rio Branco, AC</a></li>
+                </ul>
+            </div>
+        </div>
 
-        function fecharModalSeForaConteudo(event) {
-            if (event.target === event.currentTarget) {
-                fecharModal();
-            }
-        }
+        <div class="footer-bottom">
+            <p>&copy; 2025 Todos os direitos reservados.</p>
+        </div>
+    </footer>
 
-        // Fechar modal com ESC
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                fecharModal();
-            }
-        });
-
-        async function adicionarAoCarrinho() {
-            if (!usuarioLogado) {
-                alert('⚠️ Você precisa fazer login para adicionar ao carrinho!');
-                sessionStorage.setItem('redirectAfterLogin', window.location.pathname);
-                window.location.href = '/login';
-                return;
-            }
-
-            const livroId = {{ livro['id'] }};
-
-            try {
-                const response = await fetch('/api/carrinho/adicionar', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({
-                        usuario_id: usuarioLogado.id,
-                        livro_id: livroId
-                    })
-                });
-
-                const data = await response.json();
-
-                if (response.ok) {
-                    if (confirm('✅ Livro adicionado ao carrinho! Deseja ir para o carrinho?')) {
-                        window.location.href = '/';
-                    }
-                } else {
-                    alert(data.error || 'Erro ao adicionar ao carrinho');
-                }
-            } catch (error) {
-                console.error('Erro:', error);
-                alert('Erro ao conectar com o servidor');
-            }
-        }
-
-        document.getElementById('checkoutForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const usuario = JSON.parse(localStorage.getItem('usuario') || 'null');
-            
-            if (!usuario) {
-                alert('⚠️ Você precisa fazer login antes de comprar!');
-                sessionStorage.setItem('redirectAfterLogin', window.location.pathname);
-                window.location.href = '/login';
-                return;
-            }
-            
-            const email = document.getElementById('emailInput').value;
-            const livroId = {{ livro['id'] }};
-            
-            try {
-                const response = await fetch('/api/checkout', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, livro_id: livroId, usuario_id: usuario.id })
-                });
-                
-                const data = await response.json();
-                
-                if (response.ok) {
-                    pedidoAtual = data.pedido_id;
-                    document.getElementById('qrImage').src = 'data:image/png;base64,' + data.qr_base64;
-                    document.getElementById('pixText').textContent = data.pix_text;
-                    document.getElementById('qrContainer').classList.add('active');
-                } else {
-                    alert('Erro: ' + data.error);
-                }
-            } catch (error) {
-                alert('Erro ao processar compra: ' + error.message);
-            }
-        });
-
-        async function simularPagamento() {
-            if (!pedidoAtual) {
-                alert('Nenhum pedido em andamento!');
-                return;
-            }
-            
-            const statusDiv = document.getElementById('mensagemStatus');
-            statusDiv.className = 'mensagem-sucesso';
-            statusDiv.innerHTML = '🔄 Validando pagamento e enviando e-book...';
-            
-            try {
-                const response = await fetch('/api/confirmar_pagamento', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ pedido_id: pedidoAtual })
-                });
-                
-                const data = await response.json();
-                
-                if (response.ok) {
-                    statusDiv.innerHTML = '✅ Pagamento confirmado! E-book enviado para seu e-mail!';
-                    
-                    setTimeout(() => {
-                        fecharModal();
-                        window.location.href = '{{ url_for("index") }}';
-                    }, 3000);
-                } else {
-                    statusDiv.className = 'mensagem-erro';
-                    statusDiv.innerHTML = '❌ Erro: ' + data.error;
-                }
-            } catch (error) {
-                statusDiv.className = 'mensagem-erro';
-                statusDiv.innerHTML = '❌ Erro ao confirmar pagamento: ' + error.message;
-            }
-        }
-    </script>
 </body>
+
 </html>

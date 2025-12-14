@@ -1,16 +1,18 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}" />
     <link rel="stylesheet" href="{{ url_for('static', filename='css/carrinho.css') }}" />
     <script src="{{ url_for('static', filename='js/auth.js') }}"></script>
     <link rel="shortcut icon" href="{{ url_for('static', filename='images/iconLivro.png') }}">
-    
-    <title>ClicLeitura </title>
+
+    <title>ClicLeitura</title>
+
 </head>
 
 <body>
@@ -21,9 +23,6 @@
                 <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo de livro">
             </a>
 
-    
-        </a>
-
             <nav class="navbar">
                 <a href="{{ url_for('index') }}" class="active">Home</a>
                 <a href="{{ url_for('sobre_page') }}">Sobre</a>
@@ -33,18 +32,15 @@
                 <a href="{{ url_for('faq_page') }}">FAQ</a>
             </nav>
 
-
             <div class="icons">
                 <div id="carrinhoIcon" style="position: relative; display: inline-block; cursor: pointer;">
                     <img id="carrinhoImg" width="30" height="30"
-                        src="https://img.icons8.com/?size=100&id=9671&format=png&color=4d0606"
-                        alt="Carrinho de Compra" >
+                        src="https://img.icons8.com/?size=100&id=9671&format=png&color=4d0606" alt="Carrinho de Compra">
                     <span id="carrinhoCount"
-                        style=" position: absolute; top: -8px; right: -8px; background: #e74c3c; color: rgb(255, 0, 0); border-radius: 50%; width: 20px; height: 20px; font-size: 12px; font-weight: bold;  align-items: center; justify-content: center; pointer-events: none;">
+                        style=" position: absolute; top: -8px; right: -8px; background: #53120b; color: rgb(255, 255, 255); border-radius: 50%; width: 20px; height: 20px; font-size: 12px; font-weight: bold;  align-items: center; justify-content: center; pointer-events: none;">
                         0
                     </span>
                 </div>
-
 
                 <a href="{{ url_for('login_page') }}" id="loginLink">
                     <img width="30" height="30" src="https://img.icons8.com/?size=100&id=24220&format=png&color=702727"
@@ -55,8 +51,11 @@
                         alt="Meu Perfil" style="cursor: pointer;" title="Meu Perfil" />
                 </a>
                 <span id="userInfo" style="display: none; color: #4d0606; font-weight: bold; margin-left: 10px;"></span>
-                <button id="logoutBtn" style="display: none; margin-left: 10px; padding: 5px 15px; background: #f1f1f1; color: #4d0606; border: none; border-radius: 4px; cursor: pointer;"> <i class="fa-solid fa-arrow-right-from-bracket" style="color: #4d0606;"></i> Sair</button>
-                
+                <button id="logoutBtn"
+                    style="display: none; margin-left: 10px; padding: 5px 15px; background: #f1f1f1; color: #4d0606; border: none; border-radius: 4px; cursor: pointer;">
+                    <i class="fa-solid fa-arrow-right-from-bracket" style="color: #4d0606;"></i> Sair</button>
+
+            </div>
         </section>
     </header>
 
@@ -97,16 +96,14 @@
         </div>
     </div>
 
-    
-
     <div class="home-container">
         <div class="hero-left">
             <section id="sobre">
                 <div class="content">
                     <h3>Bem-vindo à ClicLeitura</h3>
                     <p>
-                        Sua livraria digital com os melhores e-books. Aqui você encontra títulos selecionados 
-                        com cuidado, pensados para oferecer conhecimento, praticidade e uma experiência de leitura 
+                        Sua livraria digital com os melhores e-books. Aqui você encontra títulos selecionados
+                        com cuidado, pensados para oferecer conhecimento, praticidade e uma experiência de leitura
                         simples e acessível.
                     </p>
                     <p>
@@ -123,26 +120,64 @@
 
     <!-- SEÇÃO DE PRODUTOS -->
     <main class="produtos" id="shop">
-        {% for livro in livros %}
-        <div class="card">
-            {% if livro['imagem'].startswith('http') %}
-                <img src="{{ livro['imagem'] }}" alt="{{ livro['titulo'] }}" onerror="this.src='{{ url_for('static', filename='images/default-book.jpg') }}'" />
-            {% else %}
-                <img src="{{ url_for('static', filename='images/' + livro['imagem']) }}" alt="{{ livro['titulo'] }}" />
-            {% endif %}
-            <h4>{{ livro['titulo'][:60] }}{% if livro['titulo']|length > 60 %}...{% endif %}</h4>
-            <p>Por {{ livro['autor'][:40] }}{% if livro['autor']|length > 40 %}...{% endif %}</p>
-            <h3>R$ {{ "%.2f"|format(livro['preco']) }}</h3>
-            <button onclick="adicionarAoCarrinho(livro,['id'])" style="margin-bottom: 0.5rem;">
-                <i class="fas fa-cart-plus"></i> Adicionar ao Carrinho
-            </button>
-            <a href="{{ url_for('livro', livro_id=livro['id']) }}">
-                <button>Ver detalhes</button>
-            </a>
-        </div>
-        {% endfor %}
-    </main>
+        {% if livros %}
+            {% set itens_por_pagina = 8 %}
+            {% set pagina_atual = request.args.get('pagina', 1, type=int) %}
+            {% set inicio = (pagina_atual - 1) * itens_por_pagina %}
+            {% set fim = inicio + itens_por_pagina %}
+            {% set livros_paginados = livros[inicio:fim] %}
+            {% set total_paginas = (livros|length + itens_por_pagina - 1) // itens_por_pagina %}
 
+            {% for livro in livros_paginados %}
+            <div class="card">
+                {% if livro['imagem'].startswith('http') %}
+                    <img src="{{ livro['imagem'] }}" alt="{{ livro['titulo'] }}" onerror="this.src='{{ url_for('static', filename='images/default-book.jpg') }}'" />
+                {% else %}
+                    <img src="{{ url_for('static', filename='images/' + livro['imagem']) }}" alt="{{ livro['titulo'] }}" />
+                {% endif %}
+                <h4>{{ livro['titulo'][:60] }}{% if livro['titulo']|length > 60 %}...{% endif %}</h4>
+                <p>Por {{ livro['autor'][:40] }}{% if livro['autor']|length > 40 %}...{% endif %}</p>
+                <h3>R$ {{ "%.2f"|format(livro['preco']) }}</h3>
+                <button onclick="adicionarAoCarrinho({{ livro['id'] }})" style="margin-bottom: 0.5rem;">
+                    <i class="fas fa-cart-plus"></i> Adicionar ao Carrinho
+                </button>
+                <a href="{{ url_for('livro', livro_id=livro['id']) }}">
+                    <button>Ver detalhes</button>
+                </a>
+            </div>
+            {% endfor %}
+
+            {% if livros_paginados|length == 0 %}
+            <div class="produtos-vazio">
+                <p>Nenhum livro encontrado nesta página.</p>
+            </div>
+            {% endif %}
+        {% else %}
+            <div class="produtos-vazio">
+                <p>Nenhum livro disponível no momento.</p>
+            </div>
+        {% endif %}
+    </main>
+    
+<div class="paginacao-container">
+    <button disabled title="Primeira página" class="paginacao-btn">
+        <i class="fas fa-angle-double-left"></i>
+    </button>
+    <button disabled title="Página anterior" class="paginacao-btn">
+        <i class="fas fa-angle-left"></i>
+    </button>
+
+    <span class="paginacao-info">
+        1 / 5
+    </span>
+
+    <a href="#" title="Próxima página" class="paginacao-btn">
+        <i class="fas fa-angle-right"></i>
+    </a>
+    <a href="#" title="Última página" class="paginacao-btn">
+        <i class="fas fa-angle-double-right"></i>
+    </a>
+</div>
     <!-- RODAPÉ -->
     <footer class="footer">
         <div class="footer-container">
@@ -186,7 +221,8 @@
                 <ul class="contact-info">
                     <li><i class="fas fa-envelope"></i> contato@clicleitura.com</li>
                     <li><i class="fas fa-phone"></i> (68) 99219-1861</li>
-                    <li><i class="fas fa-map-marker-alt"></i> <a href="{{ url_for('localizacao_page') }}" style="color: inherit; text-decoration: none;">Rio Branco, AC</a></li>
+                    <li><i class="fas fa-map-marker-alt"></i> <a href="{{ url_for('localizacao_page') }}"
+                            style="color: inherit; text-decoration: none;">Rio Branco, AC</a></li>
                 </ul>
             </div>
         </div>
@@ -208,7 +244,7 @@
             const perfilLink = document.getElementById('perfilLink');
             const userInfo = document.getElementById('userInfo');
             const logoutBtn = document.getElementById('logoutBtn');
-            
+
             if (usuario) {
                 // Usuário logado: mostrar perfil, nome e botão sair
                 loginLink.style.display = 'none';
@@ -216,7 +252,7 @@
                 userInfo.style.display = 'inline';
                 userInfo.textContent = `Olá, ${usuario.nome.split(' ')[0]}!`;
                 logoutBtn.style.display = 'inline-block';
-                
+
                 // Logout
                 logoutBtn.addEventListener('click', () => {
                     if (confirm('Deseja sair?')) {
@@ -231,6 +267,14 @@
 
             // Abrir carrinho ao clicar no ícone
             document.getElementById('carrinhoIcon').addEventListener('click', abrirCarrinho);
+
+            // Scroll suave ao mudar de página
+            const params = new URLSearchParams(window.location.search);
+            if (params.has('pagina') && params.get('pagina') != 1) {
+                setTimeout(() => {
+                    document.getElementById('shop').scrollIntoView({ behavior: 'smooth' });
+                }, 100);
+            }
         });
 
         async function adicionarAoCarrinho(livroId) {
@@ -244,7 +288,7 @@
             try {
                 const response = await fetch('/api/carrinho/adicionar', {
                     method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         usuario_id: usuarioLogado.id,
                         livro_id: livroId
@@ -374,7 +418,7 @@
                 // Criar pedidos e gerar PIX
                 const responseFinalizacao = await fetch('/api/carrinho/finalizar-pix', {
                     method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         usuario_id: usuarioLogado.id,
                         email: usuarioLogado.email
@@ -399,7 +443,7 @@
 
         function mostrarModalPix(dados) {
             const pixInfo = document.getElementById('pixInfo');
-            
+
             let html = `
                 <div style="margin-bottom: 2rem;">
                     <h3 style="color: #702727; margin-bottom: 1rem;">Pedido #${dados.pedido_id} criado!</h3>
@@ -461,7 +505,7 @@
             try {
                 const response = await fetch(`/api/pedido/${pedidoId}/confirmar-pix`, {
                     method: 'POST',
-                    headers: {'Content-Type': 'application/json'}
+                    headers: { 'Content-Type': 'application/json' }
                 });
 
                 const resultado = await response.json();
