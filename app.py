@@ -11,7 +11,7 @@ from datetime import datetime
 import hashlib
 from functools import wraps
 import time
-
+#comeco
 # 1. Carregar variáveis de ambiente
 load_dotenv()
 
