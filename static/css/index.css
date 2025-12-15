@@ -181,6 +181,7 @@ body {
 
 .card img {
     width: 100%;
+<<<<<<< HEAD
     height: 250px; 
     object-fit: contain; 
     background-color: #f9f9f9; 
@@ -191,6 +192,16 @@ body {
     padding: 10px 15px;
     flex-grow: 1; 
 }
+=======
+    height: 210px;
+    border-bottom: 1px solid #e6e6e6;
+    object-fit: contain;       /* mostra a capa inteira */
+    background-color: #f8f6f2; /* fundo claro para sobras */
+    padding: 2ox;
+}
+
+
+>>>>>>> 00991653c495965d3f412b86becb9bd30d67ed8b
 .card h4 {
     margin-top: 0.5rem;
     color: #180101;
