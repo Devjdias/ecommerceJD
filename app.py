@@ -11,7 +11,9 @@ from datetime import datetime
 import hashlib
 from functools import wraps
 import time
-
+import smtplib
+import socket
+socket.setdefaulttimeout(30) # Espera 30 segundos antes de dar erro
 # 1. Carregar variáveis de ambiente
 load_dotenv()
 
@@ -22,12 +24,17 @@ app.secret_key = os.getenv('SECRET_KEY', 'chave-secreta-mudar-em-producao')
 
 # 2. Configuração de E-mail (Mais robusta)
 app.config['MAIL_SERVER'] = os.getenv('MAIL_SERVER', 'smtp.gmail.com')
-app.config['MAIL_PORT'] = int(os.getenv('MAIL_PORT', '587'))
-app.config['MAIL_USE_TLS'] = os.getenv('MAIL_USE_TLS', 'True') == 'True'
+app.config['MAIL_PORT'] = int(os.getenv('MAIL_PORT', '465'))
+app.config['MAIL_USE_TLS'] = os.getenv('MAIL_USE_TLS', 'False') == 'False'
+app.config['MAIL_USE_SSL'] = os.getenv('MAIL_USE_SSL', 'True') == 'True'
 app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME')
 app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
 app.config['MAIL_DEFAULT_SENDER'] = os.getenv('MAIL_USERNAME')
 app.config['MAIL_DEBUG'] = True  # Isso ajuda a ver detalhes do erro no terminal
+app.config['MAIL_MAX_EMAILS'] = None
+app.config['MAIL_SUPPRESS_SEND'] = False
+app.config['MAIL_ASCII_ATTACHMENTS'] = False
+app.config['MAIL_TIMEOUT'] = 30  # Timeout de 30 segundos
 
 mail = Mail(app)
 DB = 'loja.db'
@@ -440,8 +447,12 @@ def enviar_livro_email(pedido_id):
     # Enviar email
     try:
         print(f"📧 Enviando para: {pedido['email']}")
+        print(f"   Tamanho do anexo: {len(pdf_content):,} bytes ({len(pdf_content)/1024/1024:.2f} MB)")
+        print(f"   Servidor SMTP: {app.config['MAIL_SERVER']}:{app.config['MAIL_PORT']}")
+        print(f"   Usuário: {app.config['MAIL_USERNAME']}")
         
         with app.app_context():
+            print("   Criando mensagem...")
             msg = Message(
                 subject="Tudo certo! Seu ebook já está com você 📚✨",
                 recipients=[pedido['email']]
@@ -464,7 +475,10 @@ def enviar_livro_email(pedido_id):
                 f"Equipe ClicLeitura!\n"
             )
             
+            print("   Anexando PDF...")
             msg.attach(pdf_name, 'application/pdf', pdf_content)
+            
+            print("   Conectando ao servidor SMTP e enviando...")
             mail.send(msg)
         
         print("✅ E-MAIL ENVIADO COM SUCESSO!")
@@ -476,6 +490,16 @@ def enviar_livro_email(pedido_id):
         
         return True
 
+    except smtplib.SMTPAuthenticationError as e:
+        con.close()
+        print(f"❌ ERRO DE AUTENTICAÇÃO SMTP: {e}")
+        print("💡 A senha de app do Gmail pode estar incorreta ou expirada")
+        print("   Acesse: https://myaccount.google.com/apppasswords")
+        return False
+    except smtplib.SMTPException as e:
+        con.close()
+        print(f"❌ ERRO SMTP: {e}")
+        return False
     except Exception as e:
         con.close()
         print(f"❌ Erro ao enviar email: {e}")
@@ -508,11 +532,15 @@ def api_cadastro():
         con.execute("INSERT INTO usuarios (nome, email, senha) VALUES (?, ?, ?)", 
                    (data['nome'], data['email'], data['senha']))
         con.commit()
-        return jsonify({'ok': True})
-    except sqlite3.IntegrityError:
-        return jsonify({'error': 'E-mail já existe'}), 400
-    finally:
         con.close()
+        return jsonify({'ok': True, 'message': 'Cadastro realizado com sucesso!'})
+    except sqlite3.IntegrityError:
+        con.close()
+        return jsonify({'error': 'E-mail já existe'}), 400
+    except Exception as e:
+        con.close()
+        print(f"❌ Erro no cadastro: {e}")
+        return jsonify({'error': 'Erro ao processar cadastro'}), 500
 
 @app.route('/api/login', methods=['POST'])
 def api_login():
@@ -985,7 +1013,7 @@ def admin_dashboard():
         FROM pedidos p 
         LEFT JOIN livros l ON p.livro_id = l.id
         LEFT JOIN usuarios u ON p.usuario_id = u.id
-        ORDER BY p.criado_em DESC 
+        ORDER BY p.id DESC 
         LIMIT 50
     """).fetchall()
     
@@ -1009,7 +1037,7 @@ def admin_dashboard():
         LEFT JOIN pedidos p ON u.id = p.usuario_id
         LEFT JOIN livros l ON p.livro_id = l.id
         GROUP BY u.id, u.nome, u.email, u.criado_em
-        ORDER BY total_gasto DESC
+        ORDER BY u.id DESC
     """).fetchall()
     
     con.close()

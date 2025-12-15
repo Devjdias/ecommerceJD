@@ -451,6 +451,16 @@
     color: #856404;
 }
 
+.badge-danger {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.badge-expired {
+    background: #e0e0e0;
+    color: #6c757d;
+}
+
 .btn-action {
     padding: 0.5rem 0.8rem;
     border: none;
@@ -480,13 +490,50 @@
 }
 
 .btn-sent {
-    background: #e0e0e0;
-    color: #757575;
+    background: #d4edda;
+    color: #155724;
     cursor: not-allowed;
     padding: 0.6rem 1rem;
+    font-weight: 600;
 }
 
 .btn-sent:hover {
+    transform: none;
+}
+
+.btn-waiting {
+    background: #fff3cd;
+    color: #856404;
+    cursor: not-allowed;
+    padding: 0.6rem 1rem;
+    font-weight: 600;
+}
+
+.btn-waiting:hover {
+    transform: none;
+}
+
+.btn-rejected {
+    background: #f8d7da;
+    color: #721c24;
+    cursor: not-allowed;
+    padding: 0.6rem 1rem;
+    font-weight: 600;
+}
+
+.btn-rejected:hover {
+    transform: none;
+}
+
+.btn-expired {
+    background: #e0e0e0;
+    color: #6c757d;
+    cursor: not-allowed;
+    padding: 0.6rem 1rem;
+    font-weight: 600;
+}
+
+.btn-expired:hover {
     transform: none;
 }
 

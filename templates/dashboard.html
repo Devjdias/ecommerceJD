@@ -199,24 +199,40 @@
                                 <span class="badge badge-success">
                                     <i class="fas fa-check"></i> Pago
                                 </span>
+                                {% elif pedido.status == 'REJEITADO' %}
+                                <span class="badge badge-danger">
+                                    <i class="fas fa-times"></i> Rejeitado
+                                </span>
+                                {% elif pedido.status == 'PENDENTE_APROVACAO' %}
+                                <span class="badge badge-warning">
+                                    <i class="fas fa-hourglass-half"></i> Aguardando
+                                </span>
                                 {% else %}
                                 <span class="badge badge-warning">
                                     <i class="fas fa-clock"></i> Pendente
                                 </span>
                                 {% endif %}
                             </td>
-                            <td>{{ pedido.criado_em[:16] }}</td>
+                            <td class="data-pedido" data-datetime="{{ pedido.criado_em }}">{{ pedido.criado_em[:16] }}</td>
                             <td>
-                                {% if pedido.status == 'PENDENTE' %}
+                                {% if pedido.status == 'PAGO' %}
+                                <button class="btn-action btn-sent" disabled title="E-book enviado">
+                                    <i class="fas fa-check-circle"></i> Enviado
+                                </button>
+                                {% elif pedido.status == 'PENDENTE_APROVACAO' %}
+                                <button class="btn-action btn-waiting" disabled title="Aguardando aprovação">
+                                    <i class="fas fa-hourglass-half"></i> Aguardando
+                                </button>
+                                {% elif pedido.status == 'REJEITADO' %}
+                                <button class="btn-action btn-rejected" disabled title="Pedido rejeitado">
+                                    <i class="fas fa-times-circle"></i> Não enviado
+                                </button>
+                                {% else %}
                                 <button class="btn-action btn-send" 
                                         onclick="enviarLivro({{ pedido.id }})" 
                                         title="Enviar livro por email"
                                         id="btn-{{ pedido.id }}">
                                     <i class="fas fa-paper-plane"></i> Enviar
-                                </button>
-                                {% else %}
-                                <button class="btn-action btn-sent" disabled title="Já enviado">
-                                    <i class="fas fa-check-circle"></i> Enviado
                                 </button>
                                 {% endif %}
                             </td>
@@ -533,10 +549,79 @@
             return data.toLocaleDateString('pt-BR') + ' ' + data.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
         }
 
+        // Função para converter data/hora para formato brasileiro com horário do Acre (UTC-5)
+        function formatarDataAcre(dataString) {
+            // Criar data a partir do string
+            const data = new Date(dataString.replace(' ', 'T'));
+            
+            // Formatar data no padrão brasileiro DD/MM/AAAA HH:MM
+            const opcoes = {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                timeZone: 'America/Rio_Branco' // Fuso horário do Acre (UTC-5)
+            };
+            
+            return data.toLocaleString('pt-BR', opcoes);
+        }
+
+        // Aplicar formatação de data em todas as células
+        function aplicarFormatacaoDatas() {
+            const celulas = document.querySelectorAll('.data-pedido');
+            celulas.forEach(celula => {
+                const dataOriginal = celula.getAttribute('data-datetime');
+                if (dataOriginal) {
+                    celula.textContent = formatarDataAcre(dataOriginal);
+                }
+            });
+        }
+
+        // Verificar pedidos antigos e marcar como expirados
+        function verificarPedidosAntigos() {
+            const agora = new Date();
+            const linhasPedidos = document.querySelectorAll('#tab-pedidos tbody tr');
+            
+            linhasPedidos.forEach(linha => {
+                const statusBadge = linha.querySelector('.badge-warning');
+                const dataTexto = linha.cells[6].textContent.trim(); // Coluna de data
+                const botaoAcao = linha.querySelector('.btn-send');
+                
+                if (statusBadge && statusBadge.textContent.includes('Pendente') && dataTexto) {
+                    // Converter data do pedido
+                    const dataPedido = new Date(dataTexto.replace(' ', 'T'));
+                    const diffDias = Math.floor((agora - dataPedido) / (1000 * 60 * 60 * 24));
+                    
+                    // Se passou mais de 7 dias
+                    if (diffDias > 7) {
+                        statusBadge.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Expirado';
+                        statusBadge.classList.remove('badge-warning');
+                        statusBadge.classList.add('badge-expired');
+                        
+                        if (botaoAcao) {
+                            botaoAcao.innerHTML = '<i class="fas fa-clock"></i> Tempo Excedido';
+                            botaoAcao.classList.remove('btn-send');
+                            botaoAcao.classList.add('btn-expired');
+                            botaoAcao.disabled = true;
+                            botaoAcao.onclick = null;
+                            botaoAcao.title = `Pedido feito há ${diffDias} dias - tempo excedido`;
+                        }
+                    }
+                }
+            });
+        }
+
         // Carregar pedidos pendentes quando a aba for ativada
         if (activeTab === 'aprovacoes') {
             carregarPedidosPendentes();
         }
+        
+        // Aplicar formatações ao carregar a página
+        window.addEventListener('DOMContentLoaded', () => {
+            aplicarFormatacaoDatas();
+            verificarPedidosAntigos();
+        });
     </script>
 </body>
 </html>
