@@ -158,7 +158,7 @@ body {
 
 .content p {
     color: #ffeaea;
-    font-size: 2rem;
+    font-size: 1.5rem;
     font-weight: 100;
     line-height: 2.3;
     padding: 1rem 0;
@@ -292,8 +292,6 @@ body {
     border-color: rgba(80, 5, 5, 0.692);
     transform: translateY(-2px);
 }
-
-
 
 .paginacao-info {
     color: #ffffff;

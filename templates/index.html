@@ -38,7 +38,6 @@
                         src="https://img.icons8.com/?size=100&id=9671&format=png&color=4d0606" alt="Carrinho de Compra">
                     <span id="carrinhoCount"
                         style=" position: absolute; top: -8px; right: -8px; background: #53120b; color: rgb(255, 255, 255); border-radius: 50%; width: 20px; height: 20px; font-size: 12px; font-weight: bold;  align-items: center; justify-content: center; pointer-events: none;">
-                        0
                     </span>
                 </div>
 
@@ -438,7 +437,7 @@
         function mostrarModalPix(dados) {
             const pixInfo = document.getElementById('pixInfo');
 
-            let html = 
+            let html = `
                 <div style="margin-bottom: 2rem;">
                     <h3 style="color: #702727; margin-bottom: 1rem;">Pedido #${dados.pedido_id} criado!</h3>
                     <p style="font-size: 1.4rem; color: #555;">Total: <strong style="color: #702727;">R$ ${dados.total.toFixed(2)}</strong></p>
@@ -481,7 +480,7 @@
                         style="background: #6c757d; color: white; border: none; padding: 1rem 2rem; border-radius: 5px; cursor: pointer; font-size: 1.4rem; width: 100%;">
                     Fechar
                 </button>
-            ;
+            `;
 
             pixInfo.innerHTML = html;
             document.getElementById('pixModal').style.display = 'flex';
