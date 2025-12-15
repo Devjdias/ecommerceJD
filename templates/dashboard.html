@@ -54,7 +54,7 @@
     <!-- MAIN CONTENT -->
     <main class="main-content">
         <header class="dashboard-header">
-            <h1>Painel Administrativo</h1>
+            <h1>Administrativo</h1>
             <div class="admin-info">
                 <i class="fas fa-user-circle"></i>
                 <span>{{ admin_email }}</span>
@@ -406,6 +406,12 @@
                         let html = '<div class="aprovacoes-grid">';
                         
                         data.pedidos.forEach(pedido => {
+                            // Lógica de correção da imagem
+                            let imagemSrc = pedido.livro_capa;
+                            if (!imagemSrc.startsWith('http')) {
+                                imagemSrc = `/static/images/${imagemSrc}`;
+                            }
+
                             html += `
                                 <div class="aprovacao-card" id="pedido-${pedido.id}">
                                     <div class="aprovacao-header">
@@ -414,7 +420,10 @@
                                     </div>
                                     <div class="aprovacao-body">
                                         <div class="livro-info">
-                                            <img src="${pedido.livro_capa}" alt="${pedido.livro_titulo}" class="livro-mini-capa">
+                                            <img src="${imagemSrc}" 
+                                                 alt="${pedido.livro_titulo}" 
+                                                 class="livro-mini-capa"
+                                                 onerror="this.src='/static/images/default-book.jpg'">
                                             <div>
                                                 <strong>${pedido.livro_titulo}</strong>
                                                 <p class="text-muted">R$ ${pedido.preco_final.toFixed(2)}</p>

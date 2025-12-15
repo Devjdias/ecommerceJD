@@ -11,7 +11,7 @@ from datetime import datetime
 import hashlib
 from functools import wraps
 import time
-#comeco
+
 # 1. Carregar variáveis de ambiente
 load_dotenv()
 
@@ -441,30 +441,31 @@ def enviar_livro_email(pedido_id):
     try:
         print(f"📧 Enviando para: {pedido['email']}")
         
-        msg = Message(
-            subject="Tudo certo! Seu ebook já está com você 📚✨",
-            recipients=[pedido['email']]
-        )
-        
-        # Corpo do email formatado
-        msg.body = (
-            f"Olá, {nome_cliente}!\n\n"
-            f"Que ótima notícia: seu pagamento foi confirmado! ✅\n\n"
-            f"O arquivo do seu novo e-book, \"{pedido['titulo']}\", já está anexado a este e-mail. "
-            f"Agora é só baixar, preparar um café (ou chá!) e aproveitar a leitura.\n\n"
-            f"Instruções rápidas:\n"
-            f"• Baixe o anexo.\n"
-            f"• Salve em seu dispositivo preferido.\n"
-            f"• Comece a ler!\n\n"
-            f"Caso tenha alguma dúvida sobre o uso do arquivo, você pode consultar nossos "
-            f"Termos e Políticas de Uso em http://localhost:5000/terms ou responder a este e-mail.\n\n"
-            f"Obrigada por escolher a ClicLeitura. Esperamos que essa história seja incrível!\n\n"
-            f"Um abraço,\n"
-            f"Equipe ClicLeitura!\n"
-        )
-        
-        msg.attach(pdf_name, 'application/pdf', pdf_content)
-        mail.send(msg)
+        with app.app_context():
+            msg = Message(
+                subject="Tudo certo! Seu ebook já está com você 📚✨",
+                recipients=[pedido['email']]
+            )
+            
+            # Corpo do email formatado
+            msg.body = (
+                f"Olá, {nome_cliente}!\n\n"
+                f"Que ótima notícia: seu pagamento foi confirmado! ✅\n\n"
+                f"O arquivo do seu novo e-book, \"{pedido['titulo']}\", já está anexado a este e-mail. "
+                f"Agora é só baixar, preparar um café (ou chá!) e aproveitar a leitura.\n\n"
+                f"Instruções rápidas:\n"
+                f"• Baixe o anexo.\n"
+                f"• Salve em seu dispositivo preferido.\n"
+                f"• Comece a ler!\n\n"
+                f"Caso tenha alguma dúvida sobre o uso do arquivo, você pode consultar nossos "
+                f"Termos e Políticas de Uso em http://localhost:5000/terms ou responder a este e-mail.\n\n"
+                f"Obrigada por escolher a ClicLeitura. Esperamos que essa história seja incrível!\n\n"
+                f"Um abraço,\n"
+                f"Equipe ClicLeitura!\n"
+            )
+            
+            msg.attach(pdf_name, 'application/pdf', pdf_content)
+            mail.send(msg)
         
         print("✅ E-MAIL ENVIADO COM SUCESSO!")
 
