@@ -1,4 +1,22 @@
 /* ESTILOS DA PÁGINA DE DETALHES DO LIVRO */
+
+/* Contador do carrinho */
+#carrinhoCount {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: #e74c3c;
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 12px;
+    font-weight: bold;
+    display: none; /* Oculto por padrão, mostrado apenas quando houver itens */
+    align-items: center;
+    justify-content: center;
+}
+
 .livro-detalhes {
     max-width: 900px;
     margin: 50px auto;

@@ -37,8 +37,7 @@
                     <img id="carrinhoImg" width="30" height="30"
                         src="https://img.icons8.com/?size=100&id=9671&format=png&color=4d0606" alt="Carrinho de Compra">
                     <span id="carrinhoCount"
-                        style=" position: absolute; top: -8px; right: -8px; background: #53120b; color: rgb(255, 255, 255); border-radius: 50%; width: 20px; height: 20px; font-size: 12px; font-weight: bold;  align-items: center; justify-content: center; pointer-events: none;">
-                        0
+                        style="display: none; position: absolute; top: -8px; right: -8px; background: #53120b; color: rgb(255, 255, 255); border-radius: 50%; width: 20px; height: 20px; font-size: 12px; font-weight: bold; align-items: center; justify-content: center; pointer-events: none;">
                     </span>
                 </div>
 
@@ -221,7 +220,6 @@
                 </ul>
             </div>
         </div>
-
         <div class="footer-bottom">
             <p>&copy; 2025 Todos os direitos reservados.</p>
         </div>
@@ -530,6 +528,9 @@
             }
         });
     </script>
+    
+    <!-- Script do carrinho -->
+    <script src="{{ url_for('static', filename='js/carrinho.js') }}"></script>
 </body>
 
 </html>
