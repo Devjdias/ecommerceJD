@@ -549,8 +549,40 @@
             }
         });
     </script>
+
+    <!-- MODAL DO CARRINHO -->
+    <div id="carrinhoModal" class="carrinho-modal" style="display: none;">
+        <div class="carrinho-content">
+            <div class="carrinho-header">
+                <h2><i class="fas fa-shopping-cart"></i> Meu Carrinho</h2>
+                <button class="carrinho-close" onclick="fecharCarrinho()">&times;</button>
+            </div>
+            <div id="carrinhoItens" class="carrinho-itens"></div>
+            <div class="carrinho-footer">
+                <div class="carrinho-total">
+                    <span>Total:</span>
+                    <span id="carrinhoTotal">R$ 0,00</span>
+                </div>
+                <button class="btn-finalizar" onclick="fecharPedidoEPagarComPix()">
+                    <i class="fas fa-qrcode"></i> Fechar Pedido e Pagar com PIX
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE PAGAMENTO PIX -->
+    <div id="pixModal" class="carrinho-modal" style="display: none;">
+        <div class="carrinho-content" style="max-width: 600px;">
+            <div class="carrinho-header">
+                <h2><i class="fas fa-qrcode"></i> Pagamento PIX</h2>
+                <button class="carrinho-close" onclick="fecharPixModal()">&times;</button>
+            </div>
+            <div class="pix-content" style="padding: 2rem; text-align: center;" id="pixInfo"></div>
+        </div>
+    </div>
     
     <!-- Script do carrinho -->
     <script src="{{ url_for('static', filename='js/carrinho.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/carrinho-funcoes.js') }}"></script>
 </body>
 </html>

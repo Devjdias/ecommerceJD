@@ -58,7 +58,7 @@ def index():
     """Página inicial com catálogo"""
     try:
         con = conectar()
-        livros = con.execute("SELECT id, titulo, autor, preco, imagem FROM livros LIMIT 10").fetchall()
+        livros = con.execute("SELECT id, titulo, autor, preco, imagem FROM livros ORDER BY id DESC").fetchall()
         con.close()
         return render_template('index.html', livros=[dict(l) for l in livros])
     except Exception as e:

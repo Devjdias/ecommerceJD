@@ -37,7 +37,7 @@
                     <img id="carrinhoImg" width="30" height="30"
                         src="https://img.icons8.com/?size=100&id=9671&format=png&color=4d0606" alt="Carrinho de Compra">
                     <span id="carrinhoCount"
-                        style=" position: absolute; top: -8px; right: -8px; background: #53120b; color: rgb(255, 255, 255); border-radius: 50%; width: 20px; height: 20px; font-size: 12px; font-weight: bold;  align-items: center; justify-content: center; pointer-events: none;">
+                        style="display: none; position: absolute; top: -8px; right: -8px; background: #53120b; color: rgb(255, 255, 255); border-radius: 50%; width: 20px; height: 20px; font-size: 12px; font-weight: bold; align-items: center; justify-content: center; pointer-events: none;">
                     </span>
                 </div>
 
@@ -120,15 +120,8 @@
     <!-- SEÇÃO DE PRODUTOS -->
     <main class="produtos" id="shop">
         {% if livros %}
-            {% set itens_por_pagina = 8 %}
-            {% set pagina_atual = request.args.get('pagina', 1, type=int) %}
-            {% set inicio = (pagina_atual - 1) * itens_por_pagina %}
-            {% set fim = inicio + itens_por_pagina %}
-            {% set livros_paginados = livros[inicio:fim] %}
-            {% set total_paginas = (livros|length + itens_por_pagina - 1) // itens_por_pagina %}
-
-            {% for livro in livros_paginados %}
-            <div class="card">
+            {% for livro in livros %}
+            <div class="card livro-card" data-index="{{ loop.index0 }}">
                 {% if livro['imagem'].startswith('http') %}
                     <img src="{{ livro['imagem'] }}" alt="{{ livro['titulo'] }}" onerror="this.src='{{ url_for('static', filename='images/default-book.jpg') }}'" />
                 {% else %}
@@ -145,12 +138,6 @@
                 </a>
             </div>
             {% endfor %}
-
-            {% if livros_paginados|length == 0 %}
-            <div class="produtos-vazio">
-                <p>Nenhum livro encontrado nesta página.</p>
-            </div>
-            {% endif %}
         {% else %}
             <div class="produtos-vazio">
                 <p>Nenhum livro disponível no momento.</p>
@@ -159,19 +146,17 @@
     </main>
     
 <div class="paginacao-container">
-    
-    <button disabled title="Página anterior" class="paginacao-btn">
+    <button id="btnAnterior" title="Página anterior" class="paginacao-btn" onclick="navegarCarrossel(-1)">
         <i class="fas fa-angle-left"></i>
     </button>
 
-    <span class="paginacao-info">
-        1 / 5
+    <span class="paginacao-info" id="paginacaoInfo">
+        1 / 1
     </span>
 
-    <a href="#" title="Próxima página" class="paginacao-btn">
+    <button id="btnProximo" title="Próxima página" class="paginacao-btn" onclick="navegarCarrossel(1)">
         <i class="fas fa-angle-right"></i>
-    </a>
-   
+    </button>
 </div>
     <!-- RODAPÉ -->
     <footer class="footer">
@@ -254,8 +239,18 @@
                 carregarCarrinho();
             }
 
+            // Inicializar carrossel de livros
+            inicializarCarrossel();
+
             // Abrir carrinho ao clicar no ícone
             document.getElementById('carrinhoIcon').addEventListener('click', abrirCarrinho);
+
+            // Fechar modal ao clicar fora
+            document.getElementById('carrinhoModal').addEventListener('click', (e) => {
+                if (e.target.id === 'carrinhoModal') {
+                    fecharCarrinho();
+                }
+            });
 
             // Scroll suave ao mudar de página
             const params = new URLSearchParams(window.location.search);
@@ -377,16 +372,22 @@
         }
 
         function abrirCarrinho() {
+            console.log('Abrindo carrinho...', usuarioLogado);
             if (!usuarioLogado) {
                 alert('Você precisa fazer login para ver o carrinho!');
                 window.location.href = '/login';
                 return;
             }
-            document.getElementById('carrinhoModal').classList.add('show');
+            const modal = document.getElementById('carrinhoModal');
+            console.log('Modal encontrado:', modal);
+            modal.classList.add('show');
+            modal.style.display = 'flex';
         }
 
         function fecharCarrinho() {
-            document.getElementById('carrinhoModal').classList.remove('show');
+            const modal = document.getElementById('carrinhoModal');
+            modal.classList.remove('show');
+            modal.style.display = 'none';
         }
 
         async function fecharPedidoEPagarComPix() {
@@ -469,7 +470,7 @@
 
                 <button onclick="confirmarPagamentoPix(${dados.pedido_id})" 
                         style="background: #28a745; color: white; border: none; padding: 1.2rem 2rem; border-radius: 5px; cursor: pointer; font-size: 1.5rem; width: 100%; margin-bottom: 1rem;">
-                    <i class="fas fa-check-circle"></i> Já Fiz o Pagamento
+                    <i class="fas fa-check-circle"></i> Pagamento Efetuado
                 </button>
 
                 <button onclick="fecharPixModal()" 
@@ -523,6 +524,53 @@
                 fecharCarrinho();
             }
         });
+
+        // Sistema de Carrossel de Livros
+        let paginaAtual = 1;
+        let itensPorPagina = 8;
+        let totalLivros = 0;
+        let totalPaginas = 0;
+
+        function inicializarCarrossel() {
+            const cards = document.querySelectorAll('.livro-card');
+            totalLivros = cards.length;
+            totalPaginas = Math.ceil(totalLivros / itensPorPagina);
+            
+            atualizarCarrossel();
+        }
+
+        function navegarCarrossel(direcao) {
+            paginaAtual += direcao;
+            
+            if (paginaAtual < 1) paginaAtual = 1;
+            if (paginaAtual > totalPaginas) paginaAtual = totalPaginas;
+            
+            atualizarCarrossel();
+            
+            // Scroll suave para o topo da seção de produtos
+            document.getElementById('shop').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function atualizarCarrossel() {
+            const cards = document.querySelectorAll('.livro-card');
+            const inicio = (paginaAtual - 1) * itensPorPagina;
+            const fim = inicio + itensPorPagina;
+            
+            cards.forEach((card, index) => {
+                if (index >= inicio && index < fim) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+            
+            // Atualizar info de paginação
+            document.getElementById('paginacaoInfo').textContent = `${paginaAtual} / ${totalPaginas}`;
+            
+            // Atualizar estado dos botões
+            document.getElementById('btnAnterior').disabled = (paginaAtual === 1);
+            document.getElementById('btnProximo').disabled = (paginaAtual === totalPaginas);
+        }
     </script>
     
     <!-- Script do carrinho -->

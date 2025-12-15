@@ -35,8 +35,7 @@
                         src="https://img.icons8.com/?size=100&id=9671&format=png&color=FFFFFF"
                         alt="Carrinho de Compra" >
                     <span id="carrinhoCount"
-                        style="display: none; position: absolute; top: -8px; right: -8px; background: #e74c3c; color: white; border-radius: 50%; width: 20px; height: 20px; font-size: 12px; font-weight: bold; display:flex; align-items: center; justify-content: center; ">
-                        0
+                        style="display: none; position: absolute; top: -8px; right: -8px; background: #e74c3c; color: white; border-radius: 50%; width: 20px; height: 20px; font-size: 12px; font-weight: bold; align-items: center; justify-content: center; pointer-events: none;">
                     </span>
                 </div>
 
@@ -243,5 +242,39 @@
             }
         });
     </script>
+
+    <!-- MODAL DO CARRINHO -->
+    <div id="carrinhoModal" class="carrinho-modal" style="display: none;">
+        <div class="carrinho-content">
+            <div class="carrinho-header">
+                <h2><i class="fas fa-shopping-cart"></i> Meu Carrinho</h2>
+                <button class="carrinho-close" onclick="fecharCarrinho()">&times;</button>
+            </div>
+            <div id="carrinhoItens" class="carrinho-itens"></div>
+            <div class="carrinho-footer">
+                <div class="carrinho-total">
+                    <span>Total:</span>
+                    <span id="carrinhoTotal">R$ 0,00</span>
+                </div>
+                <button class="btn-finalizar" onclick="fecharPedidoEPagarComPix()">
+                    <i class="fas fa-qrcode"></i> Fechar Pedido e Pagar com PIX
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE PAGAMENTO PIX -->
+    <div id="pixModal" class="carrinho-modal" style="display: none;">
+        <div class="carrinho-content" style="max-width: 600px;">
+            <div class="carrinho-header">
+                <h2><i class="fas fa-qrcode"></i> Pagamento PIX</h2>
+                <button class="carrinho-close" onclick="fecharPixModal()">&times;</button>
+            </div>
+            <div class="pix-content" style="padding: 2rem; text-align: center;" id="pixInfo"></div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/carrinho.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/carrinho-funcoes.js') }}"></script>
 </body>
 </html>

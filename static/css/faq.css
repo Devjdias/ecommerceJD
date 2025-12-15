@@ -143,8 +143,8 @@ a:hover {
 }
 
 #logoutBtn {
-    background: #ffffff;
-    color: #702727;
+    background: #550707;
+    color: #ffffff;
     border: none;
     border-radius: 4px;
     cursor: pointer;
@@ -153,7 +153,8 @@ a:hover {
 }
 
 #logoutBtn:hover {
-    background: #e0e0e0;
+    background: var(--vinho-escuro);
+    transform: scale(1.05);
 }
 
 /* ESTILOS DA PÁGINA FAQ */
