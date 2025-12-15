@@ -51,24 +51,27 @@ body {
 }
 
 .navbar a {
-    color: var(--vinho) !important;
+    color: #550707;
     font-weight: 500;
     font-size: 1.1rem;
     padding: 0.5rem 1rem;
-    border-radius: 4px;
+    border-radius: 6px;
     transition: all 0.25s ease;
 }
 
-.navbar a.active {
-    color: #550707;
-    background: #ffffffc5;
-}
-
+/* hover */
 .navbar a:hover {
-    color: white !important;
-    background: rgba(80, 5, 5, 0.692);
+    background-color: #550707;
+    color: #ffffff;
     transform: translateY(-2px);
 }
+
+/* ativo */
+.navbar a.active {
+    background-color: #550707;
+    color: #ffffff;
+}
+
 
 /* ========== ICONS ========== */
 .icons {
