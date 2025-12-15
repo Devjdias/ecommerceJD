@@ -1,60 +1,41 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/localizacao.css') }}" />
     <link rel="shortcut icon" href="{{ url_for('static', filename='images/iconLivro.png') }}">
-    <script src="{{ url_for('static', filename='js/auth.js') }}"></script>
-
     <title>Nossa Localização - ClicLeitura</title>
 </head>
+<body>
 
+</head>
 <body>
     <!-- HEADER -->
     <header class="header">
         <section>
-            <a href="{{ url_for('index') }}" class="logo" aria-label="ClicLeitura - início">
-                <img src="{{ url_for('static', filename='images/logo2.png') }}" alt="Logo ClicLeitura">
+            <a href="{{ url_for('index') }}" class="logo">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo ClicLeitura">
             </a>
 
-            <nav class="navbar" aria-label="Navegação principal">
+            <nav class="navbar">
                 <a href="{{ url_for('index') }}">Home</a>
                 <a href="{{ url_for('sobre_page') }}">Sobre</a>
                 <a href="{{ url_for('index') }}#shop">E-books</a>
                 <a href="{{ url_for('contato_page') }}">Contato</a>
-                <a href="{{ url_for('localizacao_page') }}" class="active">Localização</a>
-                <a href="{{ url_for('faq_page') }}">FAQ</a>
+                <a href="{{ url_for('localizacao_page') }}" style="background: rgba(255,255,255,0.1);">Localização</a>
             </nav>
 
-            <div class="icons" aria-hidden="false">
-                <div id="carrinhoIcon" style="position: relative; display: inline-block; cursor: pointer;">
-                    <img id="carrinhoImg" width="30" height="30"
-                        src="https://img.icons8.com/?size=100&id=9671&format=png&color=FFFFFF" alt="Carrinho de Compra">
-                    <span id="carrinhoCount"
-                        style="display: none; position: absolute; top: -8px; right: -8px; background: #e74c3c; color: white; border-radius: 50%; width: 20px; height: 20px; font-size: 12px; font-weight: bold; display:flex; align-items: center; justify-content: center; pointer-events: none;">
-                        0
-                    </span>
-                </div>
-
-                <a href="{{ url_for('login_page') }}" id="loginLink" title="Entrar">
+            <div class="icons">
+                <a href="{{ url_for('login_page') }}" id="loginLink">
                     <img width="30" height="30" src="https://img.icons8.com/?size=100&id=24220&format=png&color=FFFFFF"
-                        alt="Entrar na conta" />
+                        alt="Entrar na conta" style="cursor: pointer;" />
                 </a>
-
-                <a href="{{ url_for('perfil_page') }}" id="perfilLink" title="Meu perfil" style="display: none;">
+                <a href="{{ url_for('perfil_page') }}" id="perfilLink" style="display: none;">
                     <img width="30" height="30" src="https://img.icons8.com/?size=100&id=7820&format=png&color=FFFFFF"
-                        alt="Meu Perfil" />
+                        alt="Meu Perfil" style="cursor: pointer;" title="Meu Perfil" />
                 </a>
-
-
-                <span id="userInfo" style="display: none; color: #ffffff; font-weight: bold; margin-left: 10px;"></span>
-                <button id="logoutBtn"
-                    style="display: none; margin-left: 10px; padding: 5px 15px; background: #f1f1f1; color: #4d0606; border: none; border-radius: 4px; cursor: pointer;">
-                    <i class="fa-solid fa-arrow-right-from-bracket" style="color: #4d0606;"></i> Sair</button>
-
             </div>
         </section>
     </header>
@@ -72,14 +53,14 @@
             <!-- INFORMAÇÕES DE CONTATO -->
             <div class="info-section">
                 <h2><i class="fas fa-info-circle"></i> Informações de Contato</h2>
-
+                
                 <div class="info-item">
                     <i class="fas fa-map-marker-alt"></i>
                     <div class="info-content">
                         <h3>Endereço</h3>
                         <p>Rua das Flores, 123<br>
-                            Centro - Rio Branco, AC<br>
-                            CEP: 69900-000</p>
+                        Centro - Rio Branco, AC<br>
+                        CEP: 69900-000</p>
                     </div>
                 </div>
 
@@ -87,9 +68,7 @@
                     <i class="fas fa-phone"></i>
                     <div class="info-content">
                         <h3>Telefone</h3>
-                        <p><a href="tel:+5568999999999">(68) 9999-9999</a><br>
-                            <a href="tel:+5568999999998">(68) 9999-9998</a>
-                        </p>
+                        <a href="tel:+5568984162818">(68) 98416-2818</a></p>
                     </div>
                 </div>
 
@@ -98,8 +77,6 @@
                     <div class="info-content">
                         <h3>E-mail</h3>
                         <p><a href="mailto:contato@clicleitura.com">contato@clicleitura.com</a><br>
-                            <a href="mailto:1diasjosilene@gmail.com">1diasjosilene@gmail.com</a>
-                        </p>
                     </div>
                 </div>
 
@@ -107,8 +84,8 @@
                     <i class="fab fa-whatsapp"></i>
                     <div class="info-content">
                         <h3>WhatsApp</h3>
-                        <p><a href="https://wa.me/5568999999999" target="_blank">(68) 99999-9999</a><br>
-                            Atendimento rápido via WhatsApp</p>
+                        <p><a href="https://wa.me/5568992191861" target="_blank">(68) 99219-1861</a><br>
+                        Atendimento rápido via WhatsApp</p>
                     </div>
                 </div>
             </div>
@@ -116,7 +93,7 @@
             <!-- HORÁRIO DE ATENDIMENTO -->
             <div class="horario-section">
                 <h2><i class="fas fa-clock"></i> Horário de Atendimento</h2>
-
+                
                 <div class="horario-item">
                     <span class="horario-dia">Segunda-feira</span>
                     <span class="horario-hora">08:00 - 18:00</span>
@@ -159,19 +136,19 @@
             <h2><i class="fas fa-map"></i> Localização no Mapa</h2>
             <div class="map-container">
                 <!-- Mapa do Google Maps (Rio Branco - AC, Centro) -->
-                <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15879.849193362956!2d-67.81644!3d-9.97497!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x91e1c58462c6cfaf%3A0x63ef7b2bf7c8f92!2sCentro%2C%20Rio%20Branco%20-%20AC!5e0!3m2!1spt-BR!2sbr!4v1234567890123!5m2!1spt-BR!2sbr"
-                    allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+                <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15879.849193362956!2d-67.81644!3d-9.97497!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x91e1c58462c6cfaf%3A0x63ef7b2bf7c8f92!2sCentro%2C%20Rio%20Branco%20-%20AC!5e0!3m2!1spt-BR!2sbr!4v1234567890123!5m2!1spt-BR!2sbr" 
+                    allowfullscreen="" 
+                    loading="lazy" 
+                    referrerpolicy="no-referrer-when-downgrade">
                 </iframe>
             </div>
 
             <div class="action-buttons">
-                <a href="https://www.google.com/maps/dir//Centro,+Rio+Branco+-+AC" target="_blank"
-                    class="btn-action btn-primary">
+                <a href="https://www.google.com/maps/dir//Centro,+Rio+Branco+-+AC" target="_blank" class="btn-action btn-primary">
                     <i class="fas fa-directions"></i> Como Chegar
                 </a>
-                <a href="https://wa.me/5568999999999?text=Olá!%20Gostaria%20de%20saber%20mais%20sobre%20a%20ClicLeitura"
-                    target="_blank" class="btn-action btn-secondary">
+                <a href="https://wa.me/5568999999999?text=Olá!%20Gostaria%20de%20saber%20mais%20sobre%20a%20ClicLeitura" target="_blank" class="btn-action btn-secondary">
                     <i class="fab fa-whatsapp"></i> Fale Conosco via WhatsApp
                 </a>
             </div>
@@ -219,10 +196,8 @@
             <div class="footer-column">
                 <h4>Contato</h4>
                 <ul class="contact-info">
-                    <li><i class="fas fa-envelope"></i> <a href="{{ url_for('contato_page') }}"
-                            style="color: inherit;">contato@clicleitura.com</a></li>
-                    <li><i class="fas fa-phone"></i> <a href="tel:+5568999999999" style="color: inherit;">(68)
-                            9999-9999</a></li>
+                    <li><i class="fas fa-envelope"></i> <a href="{{ url_for('contato_page') }}" style="color: inherit;">contato@clicleitura.com</a></li>
+                    <li><i class="fas fa-phone"></i> <a href="tel:+5568992191861" style="color: inherit;">(68) 99219-1861</a></li>
                     <li><i class="fas fa-map-marker-alt"></i> Rio Branco, AC</li>
                 </ul>
             </div>
@@ -239,7 +214,7 @@
             const usuario = JSON.parse(localStorage.getItem('usuario') || 'null');
             const loginLink = document.getElementById('loginLink');
             const perfilLink = document.getElementById('perfilLink');
-
+            
             if (usuario) {
                 loginLink.style.display = 'none';
                 perfilLink.style.display = 'inline';
@@ -247,5 +222,4 @@
         });
     </script>
 </body>
-
 </html>
