@@ -130,7 +130,7 @@ body {
 
 /* ========== CONTAINER PRINCIPAL ========== */
 .container-sobre {
-    max-width: 1200px;
+    max-width: 1300px;
     margin: 0 auto;
     padding: 2rem;
 }
@@ -153,7 +153,7 @@ h2 {
 }
 
 .historia-texto p {
-    font-size: 1.1rem;
+    font-size: 1.3rem;
     line-height: 1.8;
     color: var(--cinza-texto);
     margin-bottom: 1.5rem;
